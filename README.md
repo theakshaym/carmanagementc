@@ -13,7 +13,10 @@ Features :
 * Check-out log file containing details of cars checked out.
 
 Default password : kle
+
 Minimum parking amount : 5 (rupees)
+
 Amount per minute parked : 0.25 (rupees)
+
 Total default parking lot : 10
 
