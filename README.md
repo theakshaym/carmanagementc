@@ -13,7 +13,7 @@ Features :
 * Check-out log file containing details of cars checked out.
 * Other settings (deleting log files, reset etc)
 
-Default password : kle
+Default password : default
 
 Total default parking lot : 10
 

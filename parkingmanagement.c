@@ -63,7 +63,7 @@ int main()
     printf(COLOR_RESET"\n\n");
      printf ( "\nEnter password: ");
     nchr = getpasswd (&p, MAXPW, '*', fp);
-    if(strcmp(p,"kle")==0)     //! Default password!!
+    if(strcmp(p,"default")==0)     //! Default password!!
     {
     	printf(COLOR_GREEN"\n\nAccess granted\n\n"COLOR_RESET);
     }else
