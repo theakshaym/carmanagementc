@@ -81,7 +81,7 @@ int main()
 	}
 	else
 	{
-		printf(COLOR_RED"\nNo log file found. Values set to zero.\n\n"COLOR_RESET);
+		printf(COLOR_RED"\nNo log file found. Values set to default.\n\n"COLOR_RESET);
 	}
 	while(1)
 	{
@@ -170,7 +170,7 @@ void createlot()  /*Creates MAXLOTS number of nodes and stores default value in 
 	p->link=NULL;
 }
 
-void entercardata()  /*Check-in function*/
+void entercardata()  /*Check-in */
 {
 	int n,cn,x=0;
 	char ch;
