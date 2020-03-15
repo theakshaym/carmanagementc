@@ -30,7 +30,7 @@ void checkout();                /*Check-out function. Also displays amount to be
 void disp();                    /*To display current status*/
 size_t getpasswd (char **pw, size_t sz, int mask, FILE *fp);   /*Authentication function (display * in password). Function credits : https://stackoverflow.com/questions/6856635/hide-password-input-on-terminal*/
 
-typedef struct node
+typedef struct node //*Structure def
 {
 	int carno;
 	int time; /*Stores time in seconds*/
@@ -63,7 +63,7 @@ int main()
     printf(COLOR_RESET"\n\n");
      printf ( "\nEnter password: ");
     nchr = getpasswd (&p, MAXPW, '*', fp);
-    if(strcmp(p,"kle")==0)
+    if(strcmp(p,"kle")==0)     //! Default password!!
     {
     	printf(COLOR_GREEN"\n\nAccess granted\n\n"COLOR_RESET);
     }else
