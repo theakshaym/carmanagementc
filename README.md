@@ -1,8 +1,8 @@
 # carmanagementc
 Check-in and Check-out car in a 10 lot parking space.
-Uses the concepts of singly linked list (C)
-Pre-req : ANSI Color code support
-Run this program on a terminal (linux preferred)
+-> Based on singly linked list (C)
+-> Pre-req : ANSI Color code support
+-> Run this program in a terminal (linux preferred)
 
 
 Features : 
