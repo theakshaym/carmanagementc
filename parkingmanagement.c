@@ -86,7 +86,7 @@ int main()
 	while(1)
 	{
 		rep : printf(COLOR_BLUE "\t       "underline"MENU"nounderline"\t       \n"COLOR_RESET);
-			for(i=1;i<=33;i++)          /*Loop to print * above the Menu fonts. */
+			for(i=1;i<=33;i++)          /*Loop to print above the Menu fonts. */
 			{
 				printf(COLOR_CYAN"*");
 			}
