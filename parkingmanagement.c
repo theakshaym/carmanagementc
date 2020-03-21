@@ -1,3 +1,4 @@
+//* Parking Management using C (Single list method)
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
@@ -323,7 +324,7 @@ int checkfile(char name[])     /*checks if .log exists or not in the directory*/
 	}
 	return 0;
 }
-int additionalsettings()
+int additionalsettings()     //Hidden menu settings
 {
 	int cho,val,i;
 	char name1[]="checkout.log", name2[]="day.log";
@@ -333,7 +334,7 @@ int additionalsettings()
 			printf(COLOR_CYAN"*");
 		}
 		printf(COLOR_RESET);
-		printf(COLOR_CYAN"\n*\t\t\t\t    *\n*"COLOR_RESET"    1.Delete Check-out log file    "COLOR_CYAN"*\n*"COLOR_RESET"    2.Delete Day log file\t    "COLOR_CYAN"*\n*"COLOR_RESET"    3.Delete all log files\t    "COLOR_CYAN"*\n*"COLOR_RESET"    4.Back\t\t\t    "COLOR_CYAN"*\n*\t\t\t\t    *\n");
+		printf(COLOR_CYAN"\n*\t\t\t\t    *\n*"COLOR_RESET"    1.Delete Check-out log file    "COLOR_CYAN"*\n*"COLOR_RESET"    2.Delete Day log file\t    "COLOR_CYAN"*\n*"COLOR_RESET"    3.Delete all log files\t    "COLOR_CYAN"*\n*"COLOR_RESET"    4.Back\t\t\t    "COLOR_CYAN"*\n*\t\t\t\t    *\n"); //!Delete log files etc
 		for(i=1;i<=37;i++)
 		{
 			printf("*");
