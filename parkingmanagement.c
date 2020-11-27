@@ -29,7 +29,7 @@ int checkfile(char name[]);     /*checks if .log exists or not in the directory 
 int additionalsettings();       /*For choice 4 in Menu*/
 void checkout();                /*Check-out function. Also displays amount to be paid by customer*/
 void disp();                    /*To display current status*/
-size_t getpasswd (char **pw, size_t sz, int mask, FILE *fp);   /*Authentication function (display * in password). Function credits : https://stackoverflow.com/questions/6856635/hide-password-input-on-terminal*/
+size_t getpasswd (char **pw, size_t sz, int mask, FILE *fp);   /*Authentication function (display * in password). From : https://stackoverflow.com/questions/6856635/hide-password-input-on-terminal */
 
 typedef struct node //*Structure def
 {
@@ -38,12 +38,12 @@ typedef struct node //*Structure def
 	int lot;
 	struct node *link;
 }*node;
+
 node first = NULL;
 node g;
 FILE *f;  /*To create logs*/
 int charge;
 
-/*Main function*/
 int main()
 {	
 	int ch,k,i,j;
@@ -62,7 +62,7 @@ int main()
     	printf("*");
     }
     printf(COLOR_RESET"\n\n");
-     printf ( "\nEnter password: ");
+    printf ( "\nEnter password: ");
     nchr = getpasswd (&p, MAXPW, '*', fp);
     if(strcmp(p,"default")==0)     //! Default password!!
     {
@@ -147,7 +147,7 @@ int main()
 				default : printf(COLOR_RED  "\nInvalid option.\n" COLOR_RESET);
 			}
 	}
-}      /*End of main*/
+}      
 
 void createlot()  /*Creates MAXLOTS number of nodes and stores default value in fields i.e 0.*/
 {
@@ -483,6 +483,7 @@ void disp()   /*To Display current status*/
 	scanf(" %c",&key);
 	printf("\n");
 }	
+
 size_t getpasswd (char **pw, size_t sz, int mask, FILE *fp)
 {
     if (!pw || !sz || !fp) return -1;       /* validate input   */
