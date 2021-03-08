@@ -19,4 +19,4 @@ Total default parking lot : 10
 
 Screenshot :
 
-[HomeScreen]: (https://raw.githubusercontent.com/keiclicks/carmanagementc/master/preview/homepage.png "Home-Page")
+[HomeScreen](https://raw.githubusercontent.com/keiclicks/carmanagementc/master/preview/homepage.png "Home-Page")
