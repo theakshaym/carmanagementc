@@ -17,4 +17,6 @@ Default password : default
 
 Total default parking lot : 10
 
-[Screenshot!](https://raw.githubusercontent.com/keiclicks/carmanagementc/master/preview/homepage.png)
+Screenshot :
+
+[HomeScreen]: https://raw.githubusercontent.com/keiclicks/carmanagementc/master/preview/homepage.png "Home-Page"
