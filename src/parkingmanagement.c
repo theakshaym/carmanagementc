@@ -3,12 +3,10 @@
 #include<stdlib.h>
 #include<time.h>
 #include<string.h>
-#include<termios.h>
 
 #define MAXLOTS 10 /*Total parking lots*/
 #define MINAMT 5   /*Minimum parking amount*/
 #define AMTPERMIN 0.25 /*Amount per minute of parking*/
-#define MAXPW 32
 
 #define COLOR_RED "\x1b[31m"                  /*ANSI Color codes.Source : ANSI library*/
 #define COLOR_GREEN "\x1b[32m"
@@ -43,36 +41,21 @@ node g;
 FILE *f;  /*To create logs*/
 int charge;
 
-int main() {	
+int main() {
 	int ch,k,i,j;
 	char ch1;
 	char filename[]="import.log";
 	char s[64];
 	node r;
-	char pw[MAXPW] = {0};
-    char *p = pw;
-    FILE *fp = stdin;
-    size_t nchr = 0;
+  size_t nchr = 0;
+  printf(COLOR_CYAN"\n\n\n\tParking Management System\t\n"COLOR_RESET);
+  printf(COLOR_MAGENTA);
 
-    printf(COLOR_CYAN"\n\n\n\tParking Management System\t\n"COLOR_RESET);
-    printf(COLOR_MAGENTA);
+  for(j=1;j<=41;j++) {
+    printf("*");
+  }
 
-    for(j=1;j<=41;j++) {
-    	printf("*");
-    }
-
-    printf(COLOR_RESET"\n\n");
-    printf ( "\nEnter password: ");
-    nchr = getpasswd (&p, MAXPW, '*', fp);
-
-    if(strcmp(p,"default")==0) { 	//! Default password!!
-    	printf(COLOR_GREEN"\n\nAccess granted\n\n"COLOR_RESET);
-    }
-	else {
-    	printf(COLOR_RED"\n\nAccess denied.\n\n"COLOR_RESET);
-    	exit(0);
-    }
-   	createlot();
+	createlot();
 
 	k=checkfile(filename); /*to check if import log exists*/
 	if(k==1) { /*True condition*/
@@ -91,8 +74,8 @@ int main() {
 
 			printf(COLOR_RESET);
 			printf("\n"COLOR_CYAN"*"COLOR_RESET"\t\t\t\t"COLOR_CYAN"*\n*"COLOR_RESET"\t1.Check in\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t2.Check out\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t3.Display Status\t"COLOR_CYAN"*\n*"COLOR_RESET"\t4.More settings \t"COLOR_CYAN"*\n*"COLOR_RESET"\t5.Exit\t\t        "COLOR_CYAN"*\n*\t\t\t\t*\n");
-			
-			for(i=1;i<=33;i++) {	/*Loop to print * below the Menu fonts.*/ 
+
+			for(i=1;i<=33;i++) {	/*Loop to print * below the Menu fonts.*/
 				printf("*");
 			}
 			printf(COLOR_RESET"\n");
@@ -133,11 +116,11 @@ int main() {
 								goto rep2;
 							}
 							break;
-				
+
 				default : printf(COLOR_RED  "\nInvalid option.\n" COLOR_RESET);
 			}
 	}
-}      
+}
 
 void createlot() {	/*Creates MAXLOTS number of nodes and stores default value in fields i.e 0.*/
 	node p,q;
@@ -233,8 +216,8 @@ void getlog(int cost, int tt) {	/*To create a check-out log file*/
 		printf(COLOR_RED"\nLog cannot be created\n"COLOR_RESET);
 	}
 	else {
-		
-		
+
+
 		fprintf(f,"%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n",ctime(&t1),g->lot,g->carno,tt,cost);
 		}
 }
@@ -244,7 +227,7 @@ void exportlog() {	/*Creates a daily log when user exits from program. Also crea
 	f=fopen("day.log","a++");
 	time_t t;
 	time(&t);
-	
+
 	fprintf(f,"%s\n",ctime(&t));
 	while(p!=NULL) {
 		if(p->carno==0) {
@@ -275,7 +258,7 @@ void getlogdata() { 	/*Reads import-log files and stores it in Linked list*/
 		p=p->link;
 	}
 	remove(filename);
-	
+
 }
 
 int checkfile(char name[]) {	/*checks if .log exists or not in the directory*/
@@ -334,8 +317,8 @@ int additionalsettings() {	//Hidden menu settings
 			default :(COLOR_RED"\nInvalid choice\n\n"COLOR_RESET);
 		}
 }
-				 
-	
+
+
 void checkout() {	/*Check-out function. Also displays amount to be paid by customer*/
 	node p;
 	char key;
@@ -344,7 +327,7 @@ void checkout() {	/*Check-out function. Also displays amount to be paid by custo
 	scanf("%d",&data);
 
 	if(data>MAXLOTS || data<=0) {
-		lab1 : printf(COLOR_RED"Invalid lot number."COLOR_RESET"\nPress 1 to continue check out\nPress 2 to return back to main menu\nChoice : "); goto lab2; 
+		lab1 : printf(COLOR_RED"Invalid lot number."COLOR_RESET"\nPress 1 to continue check out\nPress 2 to return back to main menu\nChoice : "); goto lab2;
 		lab2 : scanf("%d",&ch);
 		if(ch==1) {
 			goto lab;
@@ -382,7 +365,7 @@ void checkout() {	/*Check-out function. Also displays amount to be paid by custo
 		 }
 	}
 }
-	
+
 void disp() {	/*To Display current status*/
 	node p,r;
 	int c=1;
@@ -418,72 +401,4 @@ void disp() {	/*To Display current status*/
 	printf(COLOR_GREEN"\nPress any key (alphabets or numbers) to continue..."COLOR_RESET);
 	scanf(" %c",&key);
 	printf("\n");
-}	
-
-size_t getpasswd (char **pw, size_t sz, int mask, FILE *fp)
-{
-    if (!pw || !sz || !fp) return -1;       /* validate input   */
-#ifdef MAXPW
-    if (sz > MAXPW) sz = MAXPW;
-#endif
-
-    if (*pw == NULL) {              /* reallocate if no address */
-        void *tmp = realloc (*pw, sz * sizeof **pw);
-        if (!tmp)
-            return -1;
-        memset (tmp, 0, sz);    /* initialize memory to 0   */
-        *pw =  (char*) tmp;
-    }
-
-    size_t idx = 0;         /* index, number of chars in read   */
-    int c = 0;
-
-    struct termios old_kbd_mode;    /* orig keyboard settings   */
-    struct termios new_kbd_mode;
-
-    if (tcgetattr (0, &old_kbd_mode)) { /* save orig settings   */
-        fprintf (stderr, "%s() error: tcgetattr failed.\n", __func__);
-        return -1;
-    }   /* copy old to new */
-    memcpy (&new_kbd_mode, &old_kbd_mode, sizeof(struct termios));
-
-    new_kbd_mode.c_lflag &= ~(ICANON | ECHO);  /* new kbd flags */
-    new_kbd_mode.c_cc[VTIME] = 0;
-    new_kbd_mode.c_cc[VMIN] = 1;
-    if (tcsetattr (0, TCSANOW, &new_kbd_mode)) {
-        fprintf (stderr, "%s() error: tcsetattr failed.\n", __func__);
-        return -1;
-    }
-
-    /* read chars from fp, mask if valid char specified */
-    while (((c = fgetc (fp)) != '\n' && c != EOF && idx < sz - 1) ||
-            (idx == sz - 1 && c == 127))
-    {
-        if (c != 127) {
-            if (31 < mask && mask < 127)    /* valid ascii char */
-                fputc (mask, stdout);
-            (*pw)[idx++] = c;
-        }
-        else if (idx > 0) {         /* handle backspace (del)   */
-            if (31 < mask && mask < 127) {
-                fputc (0x8, stdout);
-                fputc (' ', stdout);
-                fputc (0x8, stdout);
-            }
-            (*pw)[--idx] = 0;
-        }
-    }
-    (*pw)[idx] = 0; /* null-terminate   */
-
-    /* reset original keyboard  */
-    if (tcsetattr (0, TCSANOW, &old_kbd_mode)) {
-        fprintf (stderr, "%s() error: tcsetattr failed.\n", __func__);
-        return -1;
-    }
-
-    if (idx == sz - 1 && c != '\n') /* warn if pw truncated */
-        fprintf (stderr, " (%s() warning: truncated at %zu chars.)\n",
-                __func__, sz - 1);
-
-    return idx; /* number of chars in passwd    */
-}	 		
+}
