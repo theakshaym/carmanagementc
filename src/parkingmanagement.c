@@ -1,4 +1,5 @@
 //* Parking Management using C (Single list method)
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
@@ -27,7 +28,6 @@ int checkfile(char name[]);     /*checks if .log exists or not in the directory 
 int additionalsettings();       /*For choice 4 in Menu*/
 void checkout();                /*Check-out function. Also displays amount to be paid by customer*/
 void disp();                    /*To display current status*/
-size_t getpasswd (char **pw, size_t sz, int mask, FILE *fp);   /*Authentication function (display * in password). From : https://stackoverflow.com/questions/6856635/hide-password-input-on-terminal */
 
 typedef struct node {
 	int carno;
