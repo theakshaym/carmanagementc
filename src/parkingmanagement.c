@@ -1,15 +1,15 @@
-//* Parking Management using C (Single list method)
+// Parking Management using C (Single list method)
 
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
 #include<string.h>
 
-#define MAXLOTS 10 /*Total parking lots*/
-#define MINAMT 5   /*Minimum parking amount*/
-#define AMTPERMIN 0.25 /*Amount per minute of parking*/
+#define MAXLOTS 10 // Total parking lots
+#define MINAMT 5   // Minimum parking amount
+#define AMTPERMIN 0.25 // Amount per minute of parking
 
-#define COLOR_RED "\x1b[31m"                  /*ANSI Color codes.Source : ANSI library*/
+#define COLOR_RED "\x1b[31m"                  // ANSI Color codes.Source : ANSI library
 #define COLOR_GREEN "\x1b[32m"
 #define COLOR_YELLOW "\x1b[33m"
 #define COLOR_BLUE "\x1b[34m"
@@ -19,26 +19,26 @@
 #define underline "\033[4m"
 #define nounderline "\033[0m"
 
-void createlot();               /*Creates MAXLOTS number of nodes and stores default value in fields i.e 0*/
-void entercardata();            /*Check-in function*/
-void getlog(int cost, int tt);          /*To create a check-out log file*/
-void exportlog();               /*Creates a daily log when user exits from program. Also creates import log which is needed to recover data*/
-void getlogdata();              /*Reads import-log files and stores it in Linked list*/
-int checkfile(char name[]);     /*checks if .log exists or not in the directory    */
-int additionalsettings();       /*For choice 4 in Menu*/
-void checkout();                /*Check-out function. Also displays amount to be paid by customer*/
-void disp();                    /*To display current status*/
+void createlot();               // Creates MAXLOTS number of nodes and stores default value in fields i.e 0
+void entercardata();            // Check-in function
+void getlog(int cost, int tt);  // To create a check-out log file
+void exportlog();               // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
+void getlogdata();              // Reads import-log files and stores it in Linked list
+int checkfile(char name[]);     // checks if .log exists or not in the directory
+int additionalsettings();       // For choice 4 in Menu
+void checkout();                // Check-out function. Also displays amount to be paid by customer
+void disp();                    // To display current status
 
 typedef struct node {
 	int carno;
-	int time; /*Stores time in seconds*/
+	int time; // Stores time in seconds
 	int lot;
 	struct node *link;
 }*node;
 
 node first = NULL;
 node g;
-FILE *f;  /*To create logs*/
+FILE *f;  // To create logs
 int charge;
 
 int main() {
@@ -57,8 +57,8 @@ int main() {
 
 	createlot();
 
-	k=checkfile(filename); /*to check if import log exists*/
-	if(k==1) { /*True condition*/
+	k=checkfile(filename); // To check if import log exists
+	if(k==1) {
 		printf(COLOR_GREEN"\nLog exists. Retaining parking details..\n\n"COLOR_RESET);
 		getlogdata();
 		}
@@ -68,20 +68,19 @@ int main() {
 	while(1) {
 		rep : printf(COLOR_BLUE "\t       "underline"MENU"nounderline"\t       \n"COLOR_RESET);
 
-			for(i=1;i<=33;i++) {	/*Loop to print above the Menu fonts. */
+			for(i=1;i<=33;i++) {	// Loop to print above the Menu fonts.
 				printf(COLOR_CYAN"*");
 			}
 
 			printf(COLOR_RESET);
 			printf("\n"COLOR_CYAN"*"COLOR_RESET"\t\t\t\t"COLOR_CYAN"*\n*"COLOR_RESET"\t1.Check in\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t2.Check out\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t3.Display Status\t"COLOR_CYAN"*\n*"COLOR_RESET"\t4.More settings \t"COLOR_CYAN"*\n*"COLOR_RESET"\t5.Exit\t\t        "COLOR_CYAN"*\n*\t\t\t\t*\n");
 
-			for(i=1;i<=33;i++) {	/*Loop to print * below the Menu fonts.*/
+			for(i=1;i<=33;i++) {	// Loop to print * below the Menu fonts.
 				printf("*");
 			}
 			printf(COLOR_RESET"\n");
 			printf(COLOR_GREEN"\nEnter your choice : "COLOR_RESET);
 			scanf("%d",&ch);
-			
 			switch(ch) {
 				case 1 : r=first;
 						 while(r!=NULL) {
@@ -122,7 +121,7 @@ int main() {
 	}
 }
 
-void createlot() {	/*Creates MAXLOTS number of nodes and stores default value in fields i.e 0.*/
+void createlot() {	// Creates MAXLOTS number of nodes and stores default value in fields i.e 0.
 	node p,q;
 	int i=2;
 	first=(node)malloc(sizeof(struct node));
@@ -207,9 +206,11 @@ void entercardata() {
 		}
 }
 
-void getlog(int cost, int tt) {	/*To create a check-out log file*/
+// To create a check-out log file
+
+void getlog(int cost, int tt) {
 	time_t t1;
-	time(&t1);  /*Contains current data and time in UTC*/
+	time(&t1);  // Contains current data and time in UTC
 	f = fopen("checkout.log","a++");
 
 	if(f==NULL) {
@@ -221,7 +222,7 @@ void getlog(int cost, int tt) {	/*To create a check-out log file*/
 		fprintf(f,"%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n",ctime(&t1),g->lot,g->carno,tt,cost);
 		}
 }
-void exportlog() {	/*Creates a daily log when user exits from program. Also creates import log which is needed to recover data*/
+void exportlog() {	// Creates a daily log when user exits from program. Also creates import log which is needed to recover data
 	node p;
 	p=first;
 	f=fopen("day.log","a++");
@@ -247,7 +248,7 @@ void exportlog() {	/*Creates a daily log when user exits from program. Also crea
 	}
 }
 
-void getlogdata() { 	/*Reads import-log files and stores it in Linked list*/
+void getlogdata() { 	// Reads import-log files and stores it in Linked list
 	char filename[]="import.log";
 	node p;
 	p=first;
@@ -261,14 +262,15 @@ void getlogdata() { 	/*Reads import-log files and stores it in Linked list*/
 
 }
 
-int checkfile(char name[]) {	/*checks if .log exists or not in the directory*/
+int checkfile(char name[]) {	// Checks if .log exists or not in the directory
 	if(f=fopen(name,"r")) {
 		fclose(f);
 		return 1;
 	}
 	return 0;
 }
-int additionalsettings() {	//Hidden menu settings
+
+int additionalsettings() {	// Hidden menu settings
 	int cho,val,i;
 	char name1[]="checkout.log", name2[]="day.log";
 	ret : printf("\n");
@@ -319,11 +321,11 @@ int additionalsettings() {	//Hidden menu settings
 }
 
 
-void checkout() {	/*Check-out function. Also displays amount to be paid by customer*/
+void checkout() {	// Check-out function. Also displays amount to be paid by customer
 	node p;
 	char key;
 	int data,ch,cost,t,tt;
-	lab : printf(COLOR_GREEN"\nEnter lot number to be checked out : "COLOR_RESET);  /*lab, lab1, lab 2 are lables for goto to jump to*/
+	lab : printf(COLOR_GREEN"\nEnter lot number to be checked out : "COLOR_RESET);  // lab, lab1, lab 2 are lables for goto to jump to
 	scanf("%d",&data);
 
 	if(data>MAXLOTS || data<=0) {
@@ -366,7 +368,7 @@ void checkout() {	/*Check-out function. Also displays amount to be paid by custo
 	}
 }
 
-void disp() {	/*To Display current status*/
+void disp() {	// To Display current status
 	node p,r;
 	int c=1;
 	char key;
