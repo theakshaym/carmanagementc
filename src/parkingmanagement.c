@@ -57,13 +57,12 @@ int main() {
 	char filename[]="import.log";
 	char s[64];
 	node r;
-  size_t nchr = 0;
-  printf(COLOR_CYAN"\n\n\n\tParking Management System\t\n"COLOR_RESET);
-  printf(COLOR_MAGENTA);
+	printf(COLOR_CYAN"\n\n\n\tParking Management System\t\n"COLOR_RESET);
+	printf(COLOR_MAGENTA);
 
-  for(j=1;j<=41;j++) {
-    printf("*");
-  }
+ 	for(j=1;j<=41;j++) {
+ 	  printf("*");
+ 	}
 
 	createlot();
 
@@ -77,14 +76,11 @@ int main() {
 	}
 	while(1) {
 		rep : printf(COLOR_BLUE "\t       "underline"MENU"nounderline"\t       \n"COLOR_RESET);
-
 			for(i=1;i<=33;i++) {	// Loop to print above the Menu fonts.
 				printf(COLOR_CYAN"*");
 			}
-
 			printf(COLOR_RESET);
-			printf("\n"COLOR_CYAN"*"COLOR_RESET"\t\t\t\t"COLOR_CYAN"*\n*"COLOR_RESET"\t1.Check in\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t2.Check out\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t3.Display Status\t"COLOR_CYAN"*\n*"COLOR_RESET"\t4.More settings \t"COLOR_CYAN"*\n*"COLOR_RESET"\t5.Exit\t\t        "COLOR_CYAN"*\n*\t\t\t\t*\n");
-
+			printf("\n"COLOR_CYAN"*"COLOR_RESET"\t\t\t\t"COLOR_CYAN"*\n*"COLOR_RESET"\t1.Check in\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t2.Check out\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t3.Display Status\t"COLOR_CYAN"*\n*"COLOR_RESET"\t4.More settings \t"COLOR_CYAN"*\n*"COLOR_RESET"\t5.Exit\t\t        "COLOR_CYAN"*\n*\t\t\t\t*\n");	
 			for(i=1;i<=33;i++) {	// Loop to print * below the Menu fonts.
 				printf("*");
 			}
@@ -125,7 +121,6 @@ int main() {
 								goto rep2;
 							}
 							break;
-
 				default : printf(COLOR_RED  "\nInvalid option.\n" COLOR_RESET);
 			}
 	}
@@ -329,7 +324,6 @@ int additionalsettings() {	// Hidden menu settings
 			default :(COLOR_RED"\nInvalid choice\n\n"COLOR_RESET);
 		}
 }
-
 
 void checkout() {	// Check-out function. Also displays amount to be paid by customer
 	node p;
