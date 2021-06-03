@@ -14,6 +14,8 @@ TODO:
 #include<stdlib.h>
 #include<time.h>
 #include<string.h>
+#include<stdint.h>
+
 
 #define MAXLOTS 10 // Total parking lots
 #define MINAMT 5   // Minimum parking amount
@@ -30,6 +32,7 @@ void checkout();                // Check-out function. Also displays amount to b
 void disp();                    // To display current status
 
 typedef struct node {
+	uint8_t lotStatus;
 	int carNumber;
 	int time; // Stores time in seconds
 	int lot;
@@ -118,6 +121,7 @@ void createlot() {	// Creates MAXLOTS number of nodes and stores default value i
 	node p,q;
 	int i=2;
 	first=(node)malloc(sizeof(struct node));
+	first->lotStatus = 0;
 	first->lot=1;
 	first->carNumber=0;
 	first->time=0;
@@ -127,6 +131,7 @@ void createlot() {	// Creates MAXLOTS number of nodes and stores default value i
 		p=(node)malloc(sizeof(struct node));
 		p->lot = i;
 		p->carNumber=p->time=0;
+		p->lotStatus = 0;
 		first->link=p;
 		first=p;
 		i++;
@@ -235,7 +240,7 @@ void exportlog() {	// Creates a daily log when user exits from program. Also cre
 	p=first;
 
 	while(p!=NULL) {
-		fprintf(f,"%d %d %d ",p->lot,p->carNumber,p->time);
+		fprintf(f,"%d %d %d %d ",p->lotStatus,p->lot,p->carNumber,p->time);
 		p=p->link;
 	}
 }
@@ -247,7 +252,7 @@ void getlogdata() { 	// Reads import-log files and stores it in Linked list
 	f=fopen("import.log","a++");
 
 	while(p!=NULL) {
-		fscanf(f,"%d%d%d",&p->lot,&p->carNumber,&p->time);
+		fscanf(f,"%d%d%d%d",&p->lotStatus,&p->lot,&p->carNumber,&p->time);
 		p=p->link;
 	}
 	remove(filename);
