@@ -2,11 +2,11 @@
 
 /*
 TODO:
-	* Change Vehicle number to string
+	* Change Vehicle number to string. Add a boolean value to check if the lot is occupied
 	* Fix the infinite loop when entered characters in choice menus.
 	* Remove all the todo: have functions do the same instead.
 	* Replaces spaces with escape character where possible.
-	* Try finding alternative for the colors. Or just remove it.
+	-Try finding alternative for the colors. Or just remove it.-
 	* Remove "Press any key to continue" prompt.
  */
 
