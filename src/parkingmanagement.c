@@ -1,5 +1,15 @@
 // Parking Management using C (Single list method)
 
+/*
+TODO:
+	* Change Vehicle number to string
+	* Fix the infinite loop when entered characters in choice menus.
+	* Remove all the todo: have functions do the same instead.
+	* Replaces spaces with escape character where possible.
+	* Try finding alternative for the colors. Or just remove it.
+	* Remove "Press any key to continue" prompt.
+ */
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
