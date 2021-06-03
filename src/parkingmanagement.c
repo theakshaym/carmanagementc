@@ -19,16 +19,6 @@ TODO:
 #define MINAMT 5   // Minimum parking amount
 #define AMTPERMIN 0.25 // Amount per minute of parking
 
-#define COLOR_RED "\x1b[31m"                  // ANSI Color codes.Source : ANSI library
-#define COLOR_GREEN "\x1b[32m"
-#define COLOR_YELLOW "\x1b[33m"
-#define COLOR_BLUE "\x1b[34m"
-#define COLOR_MAGENTA "\x1b[35m"
-#define COLOR_CYAN "\x1b[36m"
-#define COLOR_RESET "\x1b[0m"
-#define underline "\033[4m"
-#define nounderline "\033[0m"
-
 void createlot();               // Creates MAXLOTS number of nodes and stores default value in fields i.e 0
 void entercardata();            // Check-in function
 void getlog(int cost, int tt);  // To create a check-out log file
@@ -57,8 +47,7 @@ int main() {
 	char filename[]="import.log";
 	char s[64];
 	node r;
-	printf(COLOR_CYAN"\n\n\n\tParking Management System\t\n"COLOR_RESET);
-	printf(COLOR_MAGENTA);
+	printf("\n\n\n\tParking Management System\t\n");
 
  	for(j=1;j<=41;j++) {
  	  printf("*");
@@ -68,24 +57,23 @@ int main() {
 
 	k=checkfile(filename); // To check if import log exists
 	if(k==1) {
-		printf(COLOR_GREEN"\nLog exists. Retaining parking details..\n\n"COLOR_RESET);
+		printf("\nLog exists. Retaining parking details..\n\n");
 		getlogdata();
 		}
 	else {
-		printf(COLOR_RED"\nNo log file found. Values set to default.\n\n"COLOR_RESET);
+		printf("\nNo log file found. Values set to default.\n\n");
 	}
 	while(1) {
-		rep : printf(COLOR_BLUE "\t       "underline"MENU"nounderline"\t       \n"COLOR_RESET);
+		rep : printf( "\t       ""MENU\t       \n");
 			for(i=1;i<=33;i++) {	// Loop to print above the Menu fonts.
-				printf(COLOR_CYAN"*");
+				printf("*");
 			}
-			printf(COLOR_RESET);
-			printf("\n"COLOR_CYAN"*"COLOR_RESET"\t\t\t\t"COLOR_CYAN"*\n*"COLOR_RESET"\t1.Check in\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t2.Check out\t        "COLOR_CYAN"*\n*"COLOR_RESET"\t3.Display Status\t"COLOR_CYAN"*\n*"COLOR_RESET"\t4.More settings \t"COLOR_CYAN"*\n*"COLOR_RESET"\t5.Exit\t\t        "COLOR_CYAN"*\n*\t\t\t\t*\n");	
+			printf("\n""*""\t\t\t\t""*\n*""\t1.Check in\t        ""*\n*""\t2.Check out\t        ""*\n*""\t3.Display Status\t""*\n*""\t4.More settings \t""*\n*""\t5.Exit\t\t        ""*\n*\t\t\t\t*\n");
 			for(i=1;i<=33;i++) {	// Loop to print * below the Menu fonts.
 				printf("*");
 			}
-			printf(COLOR_RESET"\n");
-			printf(COLOR_GREEN"\nEnter your choice : "COLOR_RESET);
+			printf("\n");
+			printf("\nEnter your choice : ");
 			scanf("%d",&ch);
 			switch(ch) {
 				case 1 : r=first;
@@ -98,7 +86,7 @@ int main() {
 							}
 						}
 						if(r==NULL) {
-							printf(COLOR_RED"\nAll lots are occupied.\n"COLOR_RESET);
+							printf("\nAll lots are occupied.\n");
 						}
 						else {
 							entercardata();
@@ -107,7 +95,7 @@ int main() {
 				case 2 : checkout();break;
 				case 3 : disp();break;
 				case 4 : additionalsettings();break;
-				case 5 : rep2 : printf("\nAre you sure you want to exit ("COLOR_GREEN"Y"COLOR_RESET"\\"COLOR_RED"N"COLOR_RESET") : ");
+				case 5 : rep2 : printf("\nAre you sure you want to exit (""Y""\\""N"") : ");
 					 		scanf(" %c",&ch1);
 							if(ch1=='y' || ch1 == 'Y') {
 								exportlog();
@@ -117,11 +105,11 @@ int main() {
 								goto rep;
 							}
 							else {
-								printf(COLOR_RED"\nInvalid key\n"COLOR_RESET);
+								printf("\nInvalid key\n");
 								goto rep2;
 							}
 							break;
-				default : printf(COLOR_RED  "\nInvalid option.\n" COLOR_RESET);
+				default : printf(  "\nInvalid option.\n" );
 			}
 	}
 }
@@ -151,7 +139,7 @@ void entercardata() {
 	int n,cn,x=0;
 	char ch;
 	node p,q,r;
-	beg : printf(COLOR_GREEN"\nLots available : \n\n"COLOR_RESET);
+	beg : printf("\nLots available : \n\n");
 		q=first;
 		while(q!=NULL) {
 			if(q->carno==0) {
@@ -159,13 +147,12 @@ void entercardata() {
 			}
 			q=q->link;
 		}
-		printf(COLOR_GREEN"\n\nEnter lot number : "COLOR_RESET);
+		printf("\n\nEnter lot number : ");
 		scanf("%d",&n);
 		if(n>MAXLOTS || n<=0) {
-			printf(COLOR_RED"\nInvalid lot number\n"COLOR_RESET);
-			printf("\nDo you want to return back to menu? ("COLOR_GREEN"Y"COLOR_RESET"\\"COLOR_RED"N"COLOR_RESET") : "COLOR_CYAN);
+			printf("\nInvalid lot number\n");
+			printf("\nDo you want to return back to menu? (""Y""\\""N"") : ");
 			scanf(" %c",&ch);
-			printf(COLOR_RESET);
 			if(ch=='y' || ch=='Y') {
 				return;
 			}
@@ -179,10 +166,10 @@ void entercardata() {
 				p=p->link;
 			}
 			if(p->carno==0) {
-				ret2 : printf(COLOR_GREEN"Enter vehicle number (integer only) : "COLOR_RESET);
+				ret2 : printf("Enter vehicle number (integer only) : ");
 				scanf("%d",&cn);
 				if(cn==0) {
-					printf(COLOR_RED"\nInvalid vehicle number\n\n"COLOR_RESET);
+					printf("\nInvalid vehicle number\n\n");
 					goto ret2;
 				}
 				else {
@@ -191,7 +178,7 @@ void entercardata() {
 				}
 			}
 			else {
-				printf(COLOR_RED"\nLot already occupied.\n"COLOR_RESET);
+				printf("\nLot already occupied.\n");
 				r=first;
 				while(r!=NULL) {
 					if(r->carno==0) {
@@ -202,7 +189,7 @@ void entercardata() {
 					}
 				}
 				if(r==NULL) {
-					printf(COLOR_RED"\nAll lots are occupied.\n"COLOR_RESET);
+					printf("\nAll lots are occupied.\n");
 				}
 				else {
 					goto beg;
@@ -219,7 +206,7 @@ void getlog(int cost, int tt) {
 	f = fopen("checkout.log","a++");
 
 	if(f==NULL) {
-		printf(COLOR_RED"\nLog cannot be created\n"COLOR_RESET);
+		printf("\nLog cannot be created\n");
 	}
 	else {
 
@@ -280,38 +267,36 @@ int additionalsettings() {	// Hidden menu settings
 	char name1[]="checkout.log", name2[]="day.log";
 	ret : printf("\n");
 		for(i=1;i<=37;i++) {
-			printf(COLOR_CYAN"*");
+			printf("*");
 		}
-		printf(COLOR_RESET);
-		printf(COLOR_CYAN"\n*\t\t\t\t    *\n*"COLOR_RESET"    1.Delete Check-out log file    "COLOR_CYAN"*\n*"COLOR_RESET"    2.Delete Day log file\t    "COLOR_CYAN"*\n*"COLOR_RESET"    3.Delete all log files\t    "COLOR_CYAN"*\n*"COLOR_RESET"    4.Back\t\t\t    "COLOR_CYAN"*\n*\t\t\t\t    *\n"); //!Delete log files etc
+		printf("\n*\t\t\t\t    *\n*""    1.Delete Check-out log file    ""*\n*""    2.Delete Day log file\t    ""*\n*""    3.Delete all log files\t    ""*\n*""    4.Back\t\t\t    ""*\n*\t\t\t\t    *\n"); //!Delete log files etc
 		for(i=1;i<=37;i++) {
 			printf("*");
 		}
-		printf(COLOR_RESET);
-		printf(COLOR_GREEN"\n\nEnter your choice : "COLOR_RESET);
+		printf("\n\nEnter your choice : ");
 		scanf("%d",&cho);
 		switch(cho) {
 			case 1 : val=checkfile(name1);
 					if(val==1) {
 						remove(name1);
-						printf(COLOR_GREEN"\ncheckout.log deleted successfully\n\n"COLOR_RESET);
+						printf("\ncheckout.log deleted successfully\n\n");
 					}
 					else {
-						printf(COLOR_RED"\nCheckout.log does not exist\n\n"COLOR_RESET);
+						printf("\nCheckout.log does not exist\n\n");
 						goto ret;
 					}
 					break;
 			case 2 : val=checkfile(name2);
 					if(val==1) {
 						remove(name2);
-						printf(COLOR_GREEN"\nday.log deleted successfully\n\n"COLOR_RESET);
+						printf("\nday.log deleted successfully\n\n");
 					}
 					else {
-						printf(COLOR_RED"\nDay.log does not exist\n\n"COLOR_RESET);
+						printf("\nDay.log does not exist\n\n");
 						goto ret;
 					}
 					break;
-			case 3 : printf(COLOR_GREEN"\nLogs deleted\n\n"COLOR_RESET);
+			case 3 : printf("\nLogs deleted\n\n");
 					remove(name1);
 					remove(name2);
 					break;
@@ -321,7 +306,7 @@ int additionalsettings() {	// Hidden menu settings
 				     exit(0);
 			case 403 : exportlog();
 					exit(0);
-			default :(COLOR_RED"\nInvalid choice\n\n"COLOR_RESET);
+			default :("\nInvalid choice\n\n");
 		}
 }
 
@@ -329,11 +314,11 @@ void checkout() {	// Check-out function. Also displays amount to be paid by cust
 	node p;
 	char key;
 	int data,ch,cost,t,tt;
-	lab : printf(COLOR_GREEN"\nEnter lot number to be checked out : "COLOR_RESET);  // lab, lab1, lab 2 are lables for goto to jump to
+	lab : printf("\nEnter lot number to be checked out : ");  // lab, lab1, lab 2 are lables for goto to jump to
 	scanf("%d",&data);
 
 	if(data>MAXLOTS || data<=0) {
-		lab1 : printf(COLOR_RED"Invalid lot number."COLOR_RESET"\nPress 1 to continue check out\nPress 2 to return back to main menu\nChoice : "); goto lab2;
+		lab1 : printf("Invalid lot number.""\nPress 1 to continue check out\nPress 2 to return back to main menu\nChoice : "); goto lab2;
 		lab2 : scanf("%d",&ch);
 		if(ch==1) {
 			goto lab;
@@ -342,7 +327,7 @@ void checkout() {	// Check-out function. Also displays amount to be paid by cust
 			return;
 		}
 		else {
-			printf(COLOR_RED"\nInvalid option\n"COLOR_RESET);
+			printf("\nInvalid option\n");
 			printf("Press 1 to continue check-out\nPress 2 to return back to main menu\nChoice :");
 			goto lab2;
 		}
@@ -353,7 +338,7 @@ void checkout() {	// Check-out function. Also displays amount to be paid by cust
 			p=p->link;
 		}
 		if(p->carno==0) {
-		 	printf(COLOR_RED"\nLot is empty\n"COLOR_RESET);
+		 	printf("\nLot is empty\n");
 		 	printf("Press 1. to continue check out\nPress 2. to return back to main menu\nChoice :");
 		 	goto lab2;
 		 }
@@ -363,9 +348,9 @@ void checkout() {	// Check-out function. Also displays amount to be paid by cust
 		 	cost=tt*AMTPERMIN+MINAMT;
 		 	g=p;
 		 	getlog(cost,tt);
-		 	printf("\nOwner of vehicle "COLOR_GREEN"%d"COLOR_RESET" has parked for "COLOR_RED"%d minutes "COLOR_RESET"and has to pay "COLOR_GREEN"%d"COLOR_RESET" rupees.\n\n"COLOR_CYAN"Check-out successful."COLOR_RESET"\n\n",p->carno,tt,cost);
+		 	printf("\nOwner of vehicle ""%d"" has parked for ""%d minutes ""and has to pay ""%d"" rupees.\n\n""Check-out successful.""\n\n",p->carno,tt,cost);
 		 	p->carno=p->time=0;
-		 	printf(COLOR_GREEN"\nPress any key (alphabets or intergers) to continue.."COLOR_RESET);
+		 	printf("\nPress any key (alphabets or intergers) to continue..");
 		 	scanf(" %c",&key);
 		 	printf("\n\n");
 		 }
@@ -388,23 +373,23 @@ void disp() {	// To Display current status
 		}
 	}
 	if(c==1) {
-		printf(COLOR_RED"\nAll lots are empty.\n\n"COLOR_RESET);
+		printf("\nAll lots are empty.\n\n");
 	}
 	else {
-		printf(COLOR_CYAN"\nLot\t\tStatus  \t\tVehicle number\n\n"COLOR_RESET);
+		printf("\nLot\t\tStatus  \t\tVehicle number\n\n");
 		while(p!=NULL) {
 			printf(" %d \t\t",p->lot);
 			if(p->carno==0) {
-				printf(COLOR_GREEN"Empty   \t\t"COLOR_RESET"     ----   \n\n");
+				printf("Empty   \t\t""     ----   \n\n");
 				p=p->link;
 			}
 			else {
-				printf(COLOR_RED"Occupied\t\t"COLOR_RESET"     %d  \n\n",p->carno);
+				printf("Occupied\t\t""     %d  \n\n",p->carno);
 				p=p->link;
 			}
 		}
 	}
-	printf(COLOR_GREEN"\nPress any key (alphabets or numbers) to continue..."COLOR_RESET);
+	printf("\nPress any key (alphabets or numbers) to continue...");
 	scanf(" %c",&key);
 	printf("\n");
 }
