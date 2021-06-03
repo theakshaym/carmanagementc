@@ -21,21 +21,21 @@ TODO:
 #define MINAMT 5   // Minimum parking amount
 #define AMTPERMIN 0.25 // Amount per minute of parking
 
-void createlot();               // Creates MAXLOTS number of nodes and stores default value in fields i.e 0
-void entercardata();            // Check-in function
-void getlog(int cost, int tt);  // To create a check-out log file
-void exportlog();               // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
-void getlogdata();              // Reads import-log files and stores it in Linked list
-int checkfile(char name[]);     // checks if .log exists or not in the directory
-int additionalsettings();       // For choice 4 in Menu
-void checkout();                // Check-out function. Also displays amount to be paid by customer
-void disp();                    // To display current status
+void createEmptyParkingLots();               // Creates MAXLOTS number of nodes and stores default value in fields i.e 0
+void checkInCar();            // Check-in function
+void createCheckOutLog(int cost, int tt);  // To create a check-out log file
+void createDayLog();               // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
+void getAndStoreImportLog();              // Reads import-log files and stores it in Linked list
+int isFileExists(char name[]);     // checks if .log exists or not in the directory
+int additionalSettings();       // For choice 4 in Menu
+void checkOutCar();                // Check-out function. Also displays amount to be paid by customer
+void displayLotStatus();                    // To display current status
 
 typedef struct node {
 	uint8_t lotStatus;
 	int carNumber;
 	int time; // Stores time in seconds
-	int lot;
+	uint8_t lot;
 	struct node *link;
 }*node;
 
@@ -56,12 +56,12 @@ int main() {
  	  printf("*");
  	}
 
-	createlot();
+	createEmptyParkingLots();
 
-	k=checkfile(filename); // To check if import log exists
+	k=isFileExists(filename); // To check if import log exists
 	if(k==1) {
 		printf("\nLog exists. Retaining parking details..\n\n");
-		getlogdata();
+		getAndStoreImportLog();
 		}
 	else {
 		printf("\nNo log file found. Values set to default.\n\n");
@@ -92,16 +92,16 @@ int main() {
 							printf("\nAll lots are occupied.\n");
 						}
 						else {
-							entercardata();
+							checkInCar();
 						}
 						break;
-				case 2 : checkout();break;
-				case 3 : disp();break;
-				case 4 : additionalsettings();break;
+				case 2 : checkOutCar();break;
+				case 3 : displayLotStatus();break;
+				case 4 : additionalSettings();break;
 				case 5 : rep2 : printf("\nAre you sure you want to exit (""Y""\\""N"") : ");
 					 		scanf(" %c",&ch1);
 							if(ch1=='y' || ch1 == 'Y') {
-								exportlog();
+								createDayLog();
 								exit(0);
 							}
 							else if(ch1=='n' || ch1=='N') {
@@ -117,7 +117,7 @@ int main() {
 	}
 }
 
-void createlot() {	// Creates MAXLOTS number of nodes and stores default value in fields i.e 0.
+void createEmptyParkingLots() {	// Creates MAXLOTS number of nodes and stores default value in fields i.e 0.
 	node p,q;
 	int i=2;
 	first=(node)malloc(sizeof(struct node));
@@ -140,7 +140,7 @@ void createlot() {	// Creates MAXLOTS number of nodes and stores default value i
 	p->link=NULL;
 }
 
-void entercardata() {
+void checkInCar() {
 	int n,cn,x=0;
 	char ch;
 	node p,q,r;
@@ -205,7 +205,7 @@ void entercardata() {
 
 // To create a check-out log file
 
-void getlog(int cost, int tt) {
+void createCheckOutLog(int cost, int tt) {
 	time_t t1;
 	time(&t1);  // Contains current data and time in UTC
 	f = fopen("checkout.log","a++");
@@ -219,7 +219,7 @@ void getlog(int cost, int tt) {
 		fprintf(f,"%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n",ctime(&t1),g->lot,g->carNumber,tt,cost);
 		}
 }
-void exportlog() {	// Creates a daily log when user exits from program. Also creates import log which is needed to recover data
+void createDayLog() {	// Creates a daily log when user exits from program. Also creates import log which is needed to recover data
 	node p;
 	p=first;
 	f=fopen("day.log","a++");
@@ -245,7 +245,7 @@ void exportlog() {	// Creates a daily log when user exits from program. Also cre
 	}
 }
 
-void getlogdata() { 	// Reads import-log files and stores it in Linked list
+void getAndStoreImportLog() { 	// Reads import-log files and stores it in Linked list
 	char filename[]="import.log";
 	node p;
 	p=first;
@@ -259,7 +259,7 @@ void getlogdata() { 	// Reads import-log files and stores it in Linked list
 
 }
 
-int checkfile(char name[]) {	// Checks if .log exists or not in the directory
+int isFileExists(char name[]) {	// Checks if .log exists or not in the directory
 	if(f=fopen(name,"r")) {
 		fclose(f);
 		return 1;
@@ -267,7 +267,7 @@ int checkfile(char name[]) {	// Checks if .log exists or not in the directory
 	return 0;
 }
 
-int additionalsettings() {	// Hidden menu settings
+int additionalSettings() {	// Hidden menu settings
 	int cho,val,i;
 	char name1[]="checkout.log", name2[]="day.log";
 	ret : printf("\n");
@@ -281,7 +281,7 @@ int additionalsettings() {	// Hidden menu settings
 		printf("\n\nEnter your choice : ");
 		scanf("%d",&cho);
 		switch(cho) {
-			case 1 : val=checkfile(name1);
+			case 1 : val=isFileExists(name1);
 					if(val==1) {
 						remove(name1);
 						printf("\ncheckout.log deleted successfully\n\n");
@@ -291,7 +291,7 @@ int additionalsettings() {	// Hidden menu settings
 						goto ret;
 					}
 					break;
-			case 2 : val=checkfile(name2);
+			case 2 : val=isFileExists(name2);
 					if(val==1) {
 						remove(name2);
 						printf("\nday.log deleted successfully\n\n");
@@ -309,13 +309,13 @@ int additionalsettings() {	// Hidden menu settings
 			case 404 : remove(name1);
 				     remove(name2);
 				     exit(0);
-			case 403 : exportlog();
+			case 403 : createDayLog();
 					exit(0);
 			default :("\nInvalid choice\n\n");
 		}
 }
 
-void checkout() {	// Check-out function. Also displays amount to be paid by customer
+void checkOutCar() {	// Check-out function. Also displays amount to be paid by customer
 	node p;
 	char key;
 	int data,ch,cost,t,tt;
@@ -352,7 +352,7 @@ void checkout() {	// Check-out function. Also displays amount to be paid by cust
 		 	tt=t-(p->time);
 		 	cost=tt*AMTPERMIN+MINAMT;
 		 	g=p;
-		 	getlog(cost,tt);
+		 	createCheckOutLog(cost,tt);
 		 	printf("\nOwner of vehicle ""%d"" has parked for ""%d minutes ""and has to pay ""%d"" rupees.\n\n""Check-out successful.""\n\n",p->carNumber,tt,cost);
 		 	p->carNumber=p->time=0;
 		 	printf("\nPress any key (alphabets or intergers) to continue..");
@@ -362,7 +362,7 @@ void checkout() {	// Check-out function. Also displays amount to be paid by cust
 	}
 }
 
-void disp() {	// To Display current status
+void displayLotStatus() {	// To Display current status
 	node p,r;
 	int c=1;
 	char key;
