@@ -29,8 +29,6 @@ Check-in and Check-out car in a 10 lot parking space.
 |Minimum parking amount  | 5     |
 |Amount per minute       | 0.25  |
 
-Total default parking lot : 10
-
 Screenshot :
 
 ![HomeScreen](https://raw.githubusercontent.com/keiclicks/carmanagementc/master/preview/homepage.png "Home-Page")
