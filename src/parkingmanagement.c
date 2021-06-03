@@ -30,7 +30,7 @@ void checkout();                // Check-out function. Also displays amount to b
 void disp();                    // To display current status
 
 typedef struct node {
-	int carno;
+	int carNumber;
 	int time; // Stores time in seconds
 	int lot;
 	struct node *link;
@@ -78,7 +78,7 @@ int main() {
 			switch(ch) {
 				case 1 : r=first;
 						 while(r!=NULL) {
-							if(r->carno==0) {
+							if(r->carNumber==0) {
 								break;
 							}
 							else {
@@ -119,14 +119,14 @@ void createlot() {	// Creates MAXLOTS number of nodes and stores default value i
 	int i=2;
 	first=(node)malloc(sizeof(struct node));
 	first->lot=1;
-	first->carno=0;
+	first->carNumber=0;
 	first->time=0;
 	q=first;
 
 	while(i<=MAXLOTS) {
 		p=(node)malloc(sizeof(struct node));
 		p->lot = i;
-		p->carno=p->time=0;
+		p->carNumber=p->time=0;
 		first->link=p;
 		first=p;
 		i++;
@@ -142,7 +142,7 @@ void entercardata() {
 	beg : printf("\nLots available : \n\n");
 		q=first;
 		while(q!=NULL) {
-			if(q->carno==0) {
+			if(q->carNumber==0) {
 				printf("%d\t",q->lot);
 			}
 			q=q->link;
@@ -165,7 +165,7 @@ void entercardata() {
 			while(p->lot!=n) {
 				p=p->link;
 			}
-			if(p->carno==0) {
+			if(p->carNumber==0) {
 				ret2 : printf("Enter vehicle number (integer only) : ");
 				scanf("%d",&cn);
 				if(cn==0) {
@@ -173,7 +173,7 @@ void entercardata() {
 					goto ret2;
 				}
 				else {
-					p->carno=cn;
+					p->carNumber=cn;
 					p->time=time(NULL)/60;
 				}
 			}
@@ -181,7 +181,7 @@ void entercardata() {
 				printf("\nLot already occupied.\n");
 				r=first;
 				while(r!=NULL) {
-					if(r->carno==0) {
+					if(r->carNumber==0) {
 						break;
 					}
 					else {
@@ -211,7 +211,7 @@ void getlog(int cost, int tt) {
 	else {
 
 
-		fprintf(f,"%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n",ctime(&t1),g->lot,g->carno,tt,cost);
+		fprintf(f,"%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n",ctime(&t1),g->lot,g->carNumber,tt,cost);
 		}
 }
 void exportlog() {	// Creates a daily log when user exits from program. Also creates import log which is needed to recover data
@@ -223,11 +223,11 @@ void exportlog() {	// Creates a daily log when user exits from program. Also cre
 
 	fprintf(f,"%s\n",ctime(&t));
 	while(p!=NULL) {
-		if(p->carno==0) {
+		if(p->carNumber==0) {
 			p=p->link;
 		}
 		else {
-			fprintf(f,"Lot no : %d\nVehicle number : %d\n\n\n",p->lot,p->carno);
+			fprintf(f,"Lot no : %d\nVehicle number : %d\n\n\n",p->lot,p->carNumber);
 			p=p->link;
 		}
 	}
@@ -235,7 +235,7 @@ void exportlog() {	// Creates a daily log when user exits from program. Also cre
 	p=first;
 
 	while(p!=NULL) {
-		fprintf(f,"%d %d %d ",p->lot,p->carno,p->time);
+		fprintf(f,"%d %d %d ",p->lot,p->carNumber,p->time);
 		p=p->link;
 	}
 }
@@ -247,7 +247,7 @@ void getlogdata() { 	// Reads import-log files and stores it in Linked list
 	f=fopen("import.log","a++");
 
 	while(p!=NULL) {
-		fscanf(f,"%d%d%d",&p->lot,&p->carno,&p->time);
+		fscanf(f,"%d%d%d",&p->lot,&p->carNumber,&p->time);
 		p=p->link;
 	}
 	remove(filename);
@@ -337,7 +337,7 @@ void checkout() {	// Check-out function. Also displays amount to be paid by cust
 		while(p->lot!=data) {
 			p=p->link;
 		}
-		if(p->carno==0) {
+		if(p->carNumber==0) {
 		 	printf("\nLot is empty\n");
 		 	printf("Press 1. to continue check out\nPress 2. to return back to main menu\nChoice :");
 		 	goto lab2;
@@ -348,8 +348,8 @@ void checkout() {	// Check-out function. Also displays amount to be paid by cust
 		 	cost=tt*AMTPERMIN+MINAMT;
 		 	g=p;
 		 	getlog(cost,tt);
-		 	printf("\nOwner of vehicle ""%d"" has parked for ""%d minutes ""and has to pay ""%d"" rupees.\n\n""Check-out successful.""\n\n",p->carno,tt,cost);
-		 	p->carno=p->time=0;
+		 	printf("\nOwner of vehicle ""%d"" has parked for ""%d minutes ""and has to pay ""%d"" rupees.\n\n""Check-out successful.""\n\n",p->carNumber,tt,cost);
+		 	p->carNumber=p->time=0;
 		 	printf("\nPress any key (alphabets or intergers) to continue..");
 		 	scanf(" %c",&key);
 		 	printf("\n\n");
@@ -364,7 +364,7 @@ void disp() {	// To Display current status
 	p=first;
 	r=first;
 	while(r!=NULL) {
-		if(r->carno==0) {
+		if(r->carNumber==0) {
 			r=r->link;
 		}
 		else {
@@ -379,12 +379,12 @@ void disp() {	// To Display current status
 		printf("\nLot\t\tStatus  \t\tVehicle number\n\n");
 		while(p!=NULL) {
 			printf(" %d \t\t",p->lot);
-			if(p->carno==0) {
+			if(p->carNumber==0) {
 				printf("Empty   \t\t""     ----   \n\n");
 				p=p->link;
 			}
 			else {
-				printf("Occupied\t\t""     %d  \n\n",p->carno);
+				printf("Occupied\t\t""     %d  \n\n",p->carNumber);
 				p=p->link;
 			}
 		}
