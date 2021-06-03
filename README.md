@@ -17,9 +17,9 @@ Check-in and Check-out car in a 10 lot parking space.
 
 ### Branches
 
--> Master: Stable working branch
--> refactor: Testing branch
--> Legacy: Code before the refactor
+* Master: Stable working branch
+* refactor: Testing branch
+* Legacy: Code before the refactor
 
 ### Variables
 
