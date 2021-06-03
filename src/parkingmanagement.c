@@ -64,11 +64,11 @@ int main() {
 		printf("\nNo log file found. Values set to default.\n\n");
 	}
 	while(1) {
-		rep : printf( "\t       ""MENU\t       \n");
+		rep : printf("\t       ""MENU\t       \n");
 			for(i=1;i<=33;i++) {	// Loop to print above the Menu fonts.
 				printf("*");
 			}
-			printf("\n""*""\t\t\t\t""*\n*""\t1.Check in\t        ""*\n*""\t2.Check out\t        ""*\n*""\t3.Display Status\t""*\n*""\t4.More settings \t""*\n*""\t5.Exit\t\t        ""*\n*\t\t\t\t*\n");
+			printf("\n""*""\t\t\t\t""*\n*""\t1.Check in\t\t""*\n*""\t2.Check out\t\t""*\n*""\t3.Display Status\t""*\n*""\t4.More settings \t""*\n*""\t5.Exit\t\t\t""*\n*\t\t\t\t*\n");
 			for(i=1;i<=33;i++) {	// Loop to print * below the Menu fonts.
 				printf("*");
 			}
