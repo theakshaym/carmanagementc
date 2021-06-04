@@ -6,7 +6,7 @@ TODO:
 	-Add a boolean value to check if the lot is occupied-
 	* Fix the infinite loop when entered characters in choice menus.
 	* Remove all the goto: have functions do the same instead.
-	* Replace spaces with escape character where possible.
+	-Replace spaces with escape character where possible.-
 	-Try finding alternative for the colors. Or just remove it.-
 	* Remove "Press any key to continue" prompt.
  */
@@ -21,15 +21,16 @@ TODO:
 #define MINAMT 5		  // Minimum parking amount
 #define AMTPERMIN 0.25 // Amount per minute of parking
 
+int entryPromptAndMenus();
 void createEmptyParkingLots();				// Creates MAXLOTS number of nodes and stores default value in fields i.e 0
-void checkInCar();								// Check-in function
+int isFileExists(char name[]);				// checks if .log exists or not in the directory
+void getAndStoreImportLog();					// Reads import-log files and stores it in Linked list
+void checkInCar();								// To Check-in the vehicle
+void checkOutCar();								// To Check-out the vehicle
+void displayLotStatus();						// To display current parking lot status
+int additionalSettings();						// For choice 4 in Menu
 void createCheckOutLog(int cost, int tt); // To create a check-out log file
 void createDayLog();								// Creates a daily log when user exits from program. Also creates import log which is needed to recover data
-void getAndStoreImportLog();					// Reads import-log files and stores it in Linked list
-int isFileExists(char name[]);				// checks if .log exists or not in the directory
-int additionalSettings();						// For choice 4 in Menu
-void checkOutCar();								// Check-out function. Also displays amount to be paid by customer
-void displayLotStatus();						// To display current status
 
 typedef struct node
 {
@@ -47,8 +48,14 @@ int charge;
 
 int main()
 {
-	int ch, k, i, j;
-	char ch1;
+	int exitCode = entryPromptAndMenus();
+	printf("\nGoodbye!\n\n");
+}
+
+int entryPromptAndMenus()
+{
+	int fileStatus, i, j;
+	char userChoice, programExitChoice;
 	char filename[] = ".import.log";
 	char s[64];
 	node r;
@@ -61,23 +68,27 @@ int main()
 
 	createEmptyParkingLots();
 
-	k = isFileExists(filename); // To check if import log exists
-	if (k == 1)
+	fileStatus = isFileExists(filename); // To check if import log exists
+	if (fileStatus == 1)
 	{
-		printf("\nLog exists. Retaining parking details..\n\n");
+		printf("\n\nLog exists. Retaining parking details..\n"
+				 "Press any key to continue");
 		getAndStoreImportLog();
 	}
 	else
 	{
-		printf("\nNo log file found. Values set to default.\n\n");
+		printf("\n\nNo log file found. Values set to default.\n"
+				 "Press any key to continue");
 	}
-	while (1)
+
+	do
 	{
-	rep:
-		printf("\t       "
+		while ((getchar()) != '\n')
+			;
+		printf("\n\t       "
 				 "MENU\t       \n");
 		for (i = 1; i <= 33; i++)
-		{ // Loop to print above the Menu fonts.
+		{ // Loop to print * above the Menu fonts.
 			printf("*");
 		}
 		printf("\n"
@@ -100,10 +111,10 @@ int main()
 		}
 		printf("\n");
 		printf("\nEnter your choice : ");
-		scanf("%d", &ch);
-		switch (ch)
+		scanf(" %c", &userChoice);
+		switch (userChoice)
 		{
-		case 1:
+		case '1':
 			r = first;
 			while (r != NULL)
 			{
@@ -125,46 +136,61 @@ int main()
 				checkInCar();
 			}
 			break;
-		case 2:
+		case '2':
 			checkOutCar();
 			break;
-		case 3:
+		case '3':
 			displayLotStatus();
 			break;
-		case 4:
+		case '4':
 			additionalSettings();
 			break;
-		case 5:
-		rep2:
-			printf("\nAre you sure you want to exit ("
-					 "Y"
-					 "\\"
-					 "N"
-					 ") : ");
-			scanf(" %c", &ch1);
-			if (ch1 == 'y' || ch1 == 'Y')
+		case '5':
+			do
 			{
-				createDayLog();
-				exit(0);
-			}
-			else if (ch1 == 'n' || ch1 == 'N')
-			{
-				goto rep;
-			}
-			else
-			{
-				printf("\nInvalid key\n");
-				goto rep2;
-			}
+				printf("\nAre you sure you want to exit ("
+						 "Y"
+						 "\\"
+						 "N"
+						 ") : ");
+				while ((getchar()) != '\n')
+					;
+				scanf(" %c", &programExitChoice);
+				if (programExitChoice == 'y' || programExitChoice == 'Y')
+				{
+					createDayLog();
+					return 0;
+				}
+				else if (programExitChoice == 'n' || programExitChoice == 'N')
+				{
+					break;
+				}
+				else
+				{
+					printf("\nInvalid key\n");
+				}
+
+			} while (programExitChoice != 'y' && programExitChoice != 'Y');
 			break;
+
 		default:
-			printf("\nInvalid option.\n");
+			printf("\n\nInvalid option.\n\n");
 		}
+	} while (1);
+}
+
+int isFileExists(char name[])
+{
+	if (f = fopen(name, "r"))
+	{
+		fclose(f);
+		return 1;
 	}
+	return 0;
 }
 
 void createEmptyParkingLots()
-{ // Creates MAXLOTS number of nodes and stores default value in fields i.e 0.
+{
 	node p, q;
 	int i = 2;
 	first = (node)malloc(sizeof(struct node));
@@ -186,6 +212,21 @@ void createEmptyParkingLots()
 	}
 	first = q;
 	p->link = NULL;
+}
+
+void getAndStoreImportLog()
+{
+	char filename[] = ".import.log";
+	node p;
+	p = first;
+	f = fopen(".import.log", "a++");
+
+	while (p != NULL)
+	{
+		fscanf(f, "%d%d%d%d", &p->lotStatus, &p->lotNumber, &p->carNumber, &p->time);
+		p = p->link;
+	}
+	remove(filename);
 }
 
 void checkInCar()
@@ -275,82 +316,8 @@ beg:
 	}
 }
 
-// To create a check-out log file
-
-void createCheckOutLog(int cost, int tt)
-{
-	time_t t1;
-	time(&t1); // Contains current data and time in UTC
-	f = fopen("checkout.log", "a++");
-
-	if (f == NULL)
-	{
-		printf("\nLog cannot be created\n");
-	}
-	else
-	{
-
-		fprintf(f, "%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n", ctime(&t1), g->lotNumber, g->carNumber, tt, cost);
-	}
-}
-void createDayLog()
-{ // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
-	node p;
-	p = first;
-	f = fopen("day.log", "a++");
-	time_t t;
-	time(&t);
-
-	fprintf(f, "%s\n", ctime(&t));
-	while (p != NULL)
-	{
-		if (p->carNumber == 0)
-		{
-			p = p->link;
-		}
-		else
-		{
-			fprintf(f, "Lot no : %d\nVehicle number : %d\n\n\n", p->lotNumber, p->carNumber);
-			p = p->link;
-		}
-	}
-	f = fopen(".import.log", "a++");
-	p = first;
-
-	while (p != NULL)
-	{
-		fprintf(f, "%d %d %d %d ", p->lotStatus, p->lotNumber, p->carNumber, p->time);
-		p = p->link;
-	}
-}
-
-void getAndStoreImportLog()
-{ // Reads import-log files and stores it in Linked list
-	char filename[] = ".import.log";
-	node p;
-	p = first;
-	f = fopen(".import.log", "a++");
-
-	while (p != NULL)
-	{
-		fscanf(f, "%d%d%d%d", &p->lotStatus, &p->lotNumber, &p->carNumber, &p->time);
-		p = p->link;
-	}
-	remove(filename);
-}
-
-int isFileExists(char name[])
-{ // Checks if .log exists or not in the directory
-	if (f = fopen(name, "r"))
-	{
-		fclose(f);
-		return 1;
-	}
-	return 0;
-}
-
 void checkOutCar()
-{ // Check-out function. Also displays amount to be paid by customer
+{
 	node p;
 	char key;
 	int data, ch, cost, t, tt;
@@ -421,7 +388,7 @@ lab:
 }
 
 void displayLotStatus()
-{ // To Display current status
+{
 	node p, r;
 	int c = 1;
 	char key;
@@ -489,7 +456,7 @@ int additionalSettings()
 				 "    3.Delete all log files\t    "
 				 "*\n*"
 				 "    4.Back\t\t\t    "
-				 "*\n*\t\t\t\t    *\n"); //!Delete log files etc
+				 "*\n*\t\t\t\t    *\n");
 
 		for (i = 1; i <= 37; i++)
 		{
@@ -546,4 +513,52 @@ int additionalSettings()
 			printf("\n\nInvalid choice\n");
 		}
 	} while (userChoice != '4');
+}
+
+void createCheckOutLog(int cost, int tt)
+{
+	time_t t1;
+	time(&t1); // Contains current data and time in UTC
+	f = fopen("checkout.log", "a++");
+
+	if (f == NULL)
+	{
+		printf("\nLog cannot be created\n");
+	}
+	else
+	{
+
+		fprintf(f, "%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n", ctime(&t1), g->lotNumber, g->carNumber, tt, cost);
+	}
+}
+
+void createDayLog()
+{
+	node p;
+	p = first;
+	f = fopen("day.log", "a++");
+	time_t t;
+	time(&t);
+
+	fprintf(f, "%s\n", ctime(&t));
+	while (p != NULL)
+	{
+		if (p->carNumber == 0)
+		{
+			p = p->link;
+		}
+		else
+		{
+			fprintf(f, "Lot no : %d\nVehicle number : %d\n\n\n", p->lotNumber, p->carNumber);
+			p = p->link;
+		}
+	}
+	f = fopen(".import.log", "a++");
+	p = first;
+
+	while (p != NULL)
+	{
+		fprintf(f, "%d %d %d %d ", p->lotStatus, p->lotNumber, p->carNumber, p->time);
+		p = p->link;
+	}
 }
