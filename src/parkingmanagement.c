@@ -16,6 +16,7 @@ TODO:
 #include <time.h>
 #include <string.h>
 #include <stdint.h>
+#include <regex.h>
 
 #define MAXLOTS 10	  // Total parking lots
 #define MINAMT 5		  // Minimum parking amount
@@ -26,16 +27,16 @@ void createEmptyParkingLots();				// Creates MAXLOTS number of nodes and stores 
 int isFileExists(char name[]);				// checks if .log exists or not in the directory
 void getAndStoreImportLog();					// Reads import-log files and stores it in Linked list
 void checkInCar();								// To Check-in the vehicle
+int isVehicleNumberValid(const char *string, const char *pattern);    //Regex Pattern Matching for Vehicle Number
 void checkOutCar();								// To Check-out the vehicle
 void displayLotStatus();						// To display current parking lot status
 int additionalSettings();						// For choice 4 in Menu
 void createCheckOutLog(int cost, int tt); // To create a check-out log file
 void createDayLog();								// Creates a daily log when user exits from program. Also creates import log which is needed to recover data
-
 typedef struct node
 {
 	uint8_t lotStatus;
-	int carNumber;
+	char vehicleNumber[15];
 	int time; // Stores time in seconds
 	uint8_t lotNumber;
 	struct node *link;
@@ -43,7 +44,7 @@ typedef struct node
 
 node first = NULL;
 node g;
-FILE *f; // To create logs
+FILE *f;  // To create logs
 
 
 int main()
@@ -73,13 +74,13 @@ int entryPromptAndMenus()
 	if (fileStatus == 1)
 	{
 		printf("\n\nLog exists. Retaining parking details..\n"
-				 "Press any key to continue");
+				 "Press Enter/Return to continue");
 		getAndStoreImportLog();
 	}
 	else
 	{
 		printf("\n\nNo log file found. Values set to default.\n"
-				 "Press any key to continue");
+				 "Press any Enter/Return to continue");
 	}
 
 	do
@@ -119,7 +120,7 @@ int entryPromptAndMenus()
 			r = first;
 			while (r != NULL)
 			{
-				if (r->carNumber == 0)
+				if (strcmp(r->vehicleNumber,"Empty") == 0)
 				{
 					break;
 				}
@@ -199,7 +200,7 @@ void createEmptyParkingLots()
 	first = (node)malloc(sizeof(struct node));
 	first->lotStatus = 0;
 	first->lotNumber = 1;
-	first->carNumber = 0;
+	strcpy(first->vehicleNumber,"Empty");
 	first->time = 0;
 	q = first;
 
@@ -207,7 +208,8 @@ void createEmptyParkingLots()
 	{
 		p = (node)malloc(sizeof(struct node));
 		p->lotNumber = i;
-		p->carNumber = p->time = 0;
+		p->time = 0;
+		strcpy(first->vehicleNumber,"Empty");
 		p->lotStatus = 0;
 		first->link = p;
 		first = p;
@@ -220,23 +222,26 @@ void createEmptyParkingLots()
 
 void getAndStoreImportLog()
 {
-	char filename[] = ".import.log";
+	char fileName[] = ".import.log";
 	node p;
 	p = first;
 	f = fopen(".import.log", "a++");
 
 	while (p != NULL)
 	{
-		fscanf(f, "%d%d%d%d", &p->lotStatus, &p->lotNumber, &p->carNumber, &p->time);
+		fscanf(f, "%d%d%d%s", &p->lotStatus, &p->lotNumber, &p->time ,p->vehicleNumber);
 		p = p->link;
 	}
-	remove(filename);
+	fclose(f);
+	remove(fileName);
 }
 
 
 void checkInCar()
 {
 	int checkInLotNumber, cn;
+	char userVehicleNumber[15];
+	const char *vehicleRegex = "(^[a-zA-Z]+[0-9]+[a-zA-Z]+[0-9]+$)|(^[0-9]+$)";
 	char ch;
 	node p, q, r;
 beg:
@@ -252,6 +257,7 @@ beg:
 	}
 	printf("\n\nEnter lot number : ");
 	scanf("%d", &checkInLotNumber);
+	while ((getchar()) != '\n');
 	if (checkInLotNumber > MAXLOTS || checkInLotNumber <= 0)
 	{
 		printf("\nInvalid lot number\n");
@@ -280,18 +286,17 @@ beg:
 		if (p->lotStatus == 0)
 		{
 		ret2:
-			printf("Enter vehicle number (integer only) : ");
-			scanf("%d", &cn);
-			if (cn == 0)
-			{
-				printf("\nInvalid vehicle number\n\n");
-				goto ret2;
-			}
-			else
-			{
-				p->carNumber = cn;
+			printf("Enter vehicle number : ");
+			scanf("%s",userVehicleNumber);
+			if(isVehicleNumberValid(userVehicleNumber,vehicleRegex)) {
+				strcpy(p->vehicleNumber,userVehicleNumber);
 				p->time = time(NULL) / 60;
 				p->lotStatus = 1;
+			}
+			else {
+				printf("\nInvalid Vehicle Number. Possible Formats:\n\nKA31F1036\n1036\n\n");
+				printf("Press Enter/Return to continue..");
+				while ((getchar()) != '\n');
 			}
 		}
 		else
@@ -319,6 +324,19 @@ beg:
 			}
 		}
 	}
+}
+
+
+int isVehicleNumberValid(const char *string, const char *pattern)
+{
+   regex_t re;
+   if (regcomp(&re, pattern, REG_EXTENDED | REG_NOSUB) != 0)
+      return 0;
+   int status = regexec(&re, string, 0, NULL, 0);
+   regfree(&re);
+   if (status != 0)
+      return 0;
+   return 1;
 }
 
 
@@ -375,7 +393,7 @@ lab:
 			g = p;
 			createCheckOutLog(amountDue, totalTimeParked);
 			printf("\nOwner of vehicle "
-					 "%d"
+					 "%s"
 					 " has parked for "
 					 "%d minutes "
 					 "and has to pay "
@@ -383,8 +401,9 @@ lab:
 					 " rupees.\n\n"
 					 "Check-out successful."
 					 "\n\n",
-					 p->carNumber, totalTimeParked, amountDue);
-			p->carNumber = p->time = 0;
+					 p->vehicleNumber, totalTimeParked, amountDue);
+			p->time = 0;
+			strcpy(p->vehicleNumber, "Empty");
 			p->lotStatus = 0;
 			printf("\nPress any key (alphabets or intergers) to continue..");
 			scanf(" %c", &key);
@@ -432,8 +451,8 @@ void displayLotStatus()
 			else
 			{
 				printf("Occupied\t\t"
-						 "     %d  \n\n",
-						 p->carNumber);
+						 "     %s  \n\n",
+						 p->vehicleNumber);
 				p = p->link;
 			}
 		}
@@ -537,8 +556,9 @@ void createCheckOutLog(int cost, int tt)
 	else
 	{
 
-		fprintf(f, "%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n", ctime(&t1), g->lotNumber, g->carNumber, tt, cost);
+		fprintf(f, "%s\nLot no : %d\nVehicle no : %s\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n", ctime(&t1), g->lotNumber, g->vehicleNumber, tt, cost);
 	}
+	fclose(f);
 }
 
 
@@ -559,16 +579,18 @@ void createDayLog()
 		}
 		else
 		{
-			fprintf(f, "Lot no : %d\nVehicle number : %d\n\n\n", p->lotNumber, p->carNumber);
+			fprintf(f, "Lot no : %d\nVehicle number : %s\n\n\n", p->lotNumber, p->vehicleNumber);
 			p = p->link;
 		}
 	}
+	fclose(f);
 	f = fopen(".import.log", "a++");
 	p = first;
 
 	while (p != NULL)
 	{
-		fprintf(f, "%d %d %d %d ", p->lotStatus, p->lotNumber, p->carNumber, p->time);
+		fprintf(f, "%d %d %d %s ", p->lotStatus, p->lotNumber, p->time, p->vehicleNumber);
 		p = p->link;
 	}
+	fclose(f);
 }
