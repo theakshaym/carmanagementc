@@ -47,7 +47,7 @@ int charge;
 int main() {
 	int ch,k,i,j;
 	char ch1;
-	char filename[]="import.log";
+	char filename[]=".import.log";
 	char s[64];
 	node r;
 	printf("\n\n\n\tParking Management System\t\n");
@@ -147,7 +147,7 @@ void checkInCar() {
 	beg : printf("\nLots available : \n\n");
 		q=first;
 		while(q!=NULL) {
-			if(q->carNumber==0) {
+			if(q->lotStatus==0) {
 				printf("%d\t",q->lot);
 			}
 			q=q->link;
@@ -170,7 +170,7 @@ void checkInCar() {
 			while(p->lot!=n) {
 				p=p->link;
 			}
-			if(p->carNumber==0) {
+			if(p->lotStatus==0) {
 				ret2 : printf("Enter vehicle number (integer only) : ");
 				scanf("%d",&cn);
 				if(cn==0) {
@@ -180,13 +180,14 @@ void checkInCar() {
 				else {
 					p->carNumber=cn;
 					p->time=time(NULL)/60;
+					p->lotStatus = 1;
 				}
 			}
 			else {
 				printf("\nLot already occupied.\n");
 				r=first;
 				while(r!=NULL) {
-					if(r->carNumber==0) {
+					if(r->lotStatus==0) {
 						break;
 					}
 					else {
@@ -236,7 +237,7 @@ void createDayLog() {	// Creates a daily log when user exits from program. Also 
 			p=p->link;
 		}
 	}
-	f=fopen("import.log","a++");
+	f=fopen(".import.log","a++");
 	p=first;
 
 	while(p!=NULL) {
@@ -246,10 +247,10 @@ void createDayLog() {	// Creates a daily log when user exits from program. Also 
 }
 
 void getAndStoreImportLog() { 	// Reads import-log files and stores it in Linked list
-	char filename[]="import.log";
+	char filename[]=".import.log";
 	node p;
 	p=first;
-	f=fopen("import.log","a++");
+	f=fopen(".import.log","a++");
 
 	while(p!=NULL) {
 		fscanf(f,"%d%d%d%d",&p->lotStatus,&p->lot,&p->carNumber,&p->time);
@@ -342,7 +343,7 @@ void checkOutCar() {	// Check-out function. Also displays amount to be paid by c
 		while(p->lot!=data) {
 			p=p->link;
 		}
-		if(p->carNumber==0) {
+		if(p->lotStatus==0) {
 		 	printf("\nLot is empty\n");
 		 	printf("Press 1. to continue check out\nPress 2. to return back to main menu\nChoice :");
 		 	goto lab2;
@@ -355,6 +356,7 @@ void checkOutCar() {	// Check-out function. Also displays amount to be paid by c
 		 	createCheckOutLog(cost,tt);
 		 	printf("\nOwner of vehicle ""%d"" has parked for ""%d minutes ""and has to pay ""%d"" rupees.\n\n""Check-out successful.""\n\n",p->carNumber,tt,cost);
 		 	p->carNumber=p->time=0;
+			p->lotStatus = 0;
 		 	printf("\nPress any key (alphabets or intergers) to continue..");
 		 	scanf(" %c",&key);
 		 	printf("\n\n");
@@ -369,7 +371,7 @@ void displayLotStatus() {	// To Display current status
 	p=first;
 	r=first;
 	while(r!=NULL) {
-		if(r->carNumber==0) {
+		if(r->lotStatus==0) {
 			r=r->link;
 		}
 		else {
@@ -384,7 +386,7 @@ void displayLotStatus() {	// To Display current status
 		printf("\nLot\t\tStatus  \t\tVehicle number\n\n");
 		while(p!=NULL) {
 			printf(" %d \t\t",p->lot);
-			if(p->carNumber==0) {
+			if(p->lotStatus==0) {
 				printf("Empty   \t\t""     ----   \n\n");
 				p=p->link;
 			}
