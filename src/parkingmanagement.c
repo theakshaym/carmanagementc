@@ -370,8 +370,9 @@ int additionalSettings() {
 				printf("*");
 			}
 			printf("\n\nEnter your choice : ");
-			userChoice = getchar();
 			while((getchar()) != '\n');
+			userChoice = getchar();
+			  //reads the buffer till the end and discards them (including newline)
 			switch(userChoice) {
 				case '1' : val=isFileExists(name1);
 						if(val==1) {
