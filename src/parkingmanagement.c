@@ -269,53 +269,6 @@ int isFileExists(char name[]) {	// Checks if .log exists or not in the directory
 	return 0;
 }
 
-int additionalSettings() {	// Hidden menu settings
-	int cho,val,i;
-	char name1[]="checkout.log", name2[]="day.log";
-	ret : printf("\n");
-		for(i=1;i<=37;i++) {
-			printf("*");
-		}
-		printf("\n*\t\t\t\t    *\n*""    1.Delete Check-out log file    ""*\n*""    2.Delete Day log file\t    ""*\n*""    3.Delete all log files\t    ""*\n*""    4.Back\t\t\t    ""*\n*\t\t\t\t    *\n"); //!Delete log files etc
-		for(i=1;i<=37;i++) {
-			printf("*");
-		}
-		printf("\n\nEnter your choice : ");
-		scanf("%d",&cho);
-		switch(cho) {
-			case 1 : val=isFileExists(name1);
-					if(val==1) {
-						remove(name1);
-						printf("\ncheckout.log deleted successfully\n\n");
-					}
-					else {
-						printf("\nCheckout.log does not exist\n\n");
-						goto ret;
-					}
-					break;
-			case 2 : val=isFileExists(name2);
-					if(val==1) {
-						remove(name2);
-						printf("\nday.log deleted successfully\n\n");
-					}
-					else {
-						printf("\nDay.log does not exist\n\n");
-						goto ret;
-					}
-					break;
-			case 3 : printf("\nLogs deleted\n\n");
-					remove(name1);
-					remove(name2);
-					break;
-			case 4 : break;
-			case 404 : remove(name1);
-				     remove(name2);
-				     exit(0);
-			case 403 : createDayLog();
-					exit(0);
-			default :("\nInvalid choice\n\n");
-		}
-}
 
 void checkOutCar() {	// Check-out function. Also displays amount to be paid by customer
 	node p;
@@ -401,3 +354,57 @@ void displayLotStatus() {	// To Display current status
 	scanf(" %c",&key);
 	printf("\n");
 }
+
+
+int additionalSettings() {
+	int val,i;
+	char userChoice;
+	char name1[]="checkout.log", name2[]="day.log";
+	do {
+		printf("\n");
+			for(i=1;i<=37;i++) {
+				printf("*");
+			}
+			printf("\n*\t\t\t\t    *\n*""    1.Delete Check-out log file    ""*\n*""    2.Delete Day log file\t    ""*\n*""    3.Delete all log files\t    ""*\n*""    4.Back\t\t\t    ""*\n*\t\t\t\t    *\n"); //!Delete log files etc
+			for(i=1;i<=37;i++) {
+				printf("*");
+			}
+			printf("\n\nEnter your choice : ");
+			userChoice = getchar();
+			while((getchar()) != '\n');
+			switch(userChoice) {
+				case '1' : val=isFileExists(name1);
+						if(val==1) {
+							remove(name1);
+							printf("\ncheckout.log deleted successfully\n\n");
+						}
+						else {
+							printf("\nCheckout.log does not exist\n\n");
+							printf("\nReturning back to additional settings\n");
+						}
+						break;
+				case '2' : val=isFileExists(name2);
+						if(val==1) {
+							remove(name2);
+							printf("\nday.log deleted successfully\n\n");
+						}
+						else {
+							printf("\nDay.log does not exist\n\n");
+							printf("\nReturning back to additional settings\n");
+						}
+						break;
+				case '3' : printf("\nLogs deleted\n\n");
+						remove(name1);
+						remove(name2);
+						break;
+				case '4' : break;
+				case '5' : remove(name1);
+						remove(name2);
+						exit(0);
+				case '6' : createDayLog();
+							exit(0);
+				default : printf("\n\nInvalid choice\n");
+			}
+	}while(userChoice!='4');
+}
+
