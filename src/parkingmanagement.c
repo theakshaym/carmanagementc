@@ -44,13 +44,14 @@ typedef struct node
 node first = NULL;
 node g;
 FILE *f; // To create logs
-int charge;
+
 
 int main()
 {
 	int exitCode = entryPromptAndMenus();
 	printf("\nGoodbye!\n\n");
 }
+
 
 int entryPromptAndMenus()
 {
@@ -179,6 +180,7 @@ int entryPromptAndMenus()
 	} while (1);
 }
 
+
 int isFileExists(char name[])
 {
 	if (f = fopen(name, "r"))
@@ -188,6 +190,7 @@ int isFileExists(char name[])
 	}
 	return 0;
 }
+
 
 void createEmptyParkingLots()
 {
@@ -214,6 +217,7 @@ void createEmptyParkingLots()
 	p->link = NULL;
 }
 
+
 void getAndStoreImportLog()
 {
 	char filename[] = ".import.log";
@@ -229,9 +233,10 @@ void getAndStoreImportLog()
 	remove(filename);
 }
 
+
 void checkInCar()
 {
-	int n, cn, x = 0;
+	int checkInLotNumber, cn;
 	char ch;
 	node p, q, r;
 beg:
@@ -246,8 +251,8 @@ beg:
 		q = q->link;
 	}
 	printf("\n\nEnter lot number : ");
-	scanf("%d", &n);
-	if (n > MAXLOTS || n <= 0)
+	scanf("%d", &checkInLotNumber);
+	if (checkInLotNumber > MAXLOTS || checkInLotNumber <= 0)
 	{
 		printf("\nInvalid lot number\n");
 		printf("\nDo you want to return back to menu? ("
@@ -268,7 +273,7 @@ beg:
 	else
 	{
 		p = first;
-		while (p->lotNumber != n)
+		while (p->lotNumber != checkInLotNumber)
 		{
 			p = p->link;
 		}
@@ -316,11 +321,12 @@ beg:
 	}
 }
 
+
 void checkOutCar()
 {
 	node p;
 	char key;
-	int data, ch, cost, t, tt;
+	int data, ch, amountDue, currentTimeInMinutes, totalTimeParked;
 lab:
 	printf("\nEnter lot number to be checked out : "); // lab, lab1, lab 2 are lables for goto to jump to
 	scanf("%d", &data);
@@ -363,11 +369,11 @@ lab:
 		}
 		else
 		{
-			t = time(NULL) / 60;
-			tt = t - (p->time);
-			cost = tt * AMTPERMIN + MINAMT;
+			currentTimeInMinutes = time(NULL) / 60;
+			totalTimeParked = currentTimeInMinutes - (p->time);
+			amountDue = totalTimeParked * AMTPERMIN + MINAMT;
 			g = p;
-			createCheckOutLog(cost, tt);
+			createCheckOutLog(amountDue, totalTimeParked);
 			printf("\nOwner of vehicle "
 					 "%d"
 					 " has parked for "
@@ -377,7 +383,7 @@ lab:
 					 " rupees.\n\n"
 					 "Check-out successful."
 					 "\n\n",
-					 p->carNumber, tt, cost);
+					 p->carNumber, totalTimeParked, amountDue);
 			p->carNumber = p->time = 0;
 			p->lotStatus = 0;
 			printf("\nPress any key (alphabets or intergers) to continue..");
@@ -387,10 +393,11 @@ lab:
 	}
 }
 
+
 void displayLotStatus()
 {
 	node p, r;
-	int c = 1;
+	int lotCurrentStatus = 1;
 	char key;
 	p = first;
 	r = first;
@@ -402,11 +409,11 @@ void displayLotStatus()
 		}
 		else
 		{
-			c = 0;
+			lotCurrentStatus = 0;
 			r = r->link;
 		}
 	}
-	if (c == 1)
+	if (lotCurrentStatus == 1)
 	{
 		printf("\nAll lots are empty.\n\n");
 	}
@@ -436,11 +443,12 @@ void displayLotStatus()
 	printf("\n");
 }
 
+
 int additionalSettings()
 {
-	int val, i;
+	int fileStatus, i;
 	char userChoice;
-	char name1[] = "checkout.log", name2[] = "day.log";
+	char checkoutLog[] = "checkout.log", dayLog[] = "day.log";
 	do
 	{
 		printf("\n");
@@ -470,10 +478,10 @@ int additionalSettings()
 		switch (userChoice)
 		{
 		case '1':
-			val = isFileExists(name1);
-			if (val == 1)
+			fileStatus = isFileExists(checkoutLog);
+			if (fileStatus == 1)
 			{
-				remove(name1);
+				remove(checkoutLog);
 				printf("\ncheckout.log deleted successfully\n\n");
 			}
 			else
@@ -483,10 +491,10 @@ int additionalSettings()
 			}
 			break;
 		case '2':
-			val = isFileExists(name2);
-			if (val == 1)
+			fileStatus = isFileExists(dayLog);
+			if (fileStatus == 1)
 			{
-				remove(name2);
+				remove(dayLog);
 				printf("\nday.log deleted successfully\n\n");
 			}
 			else
@@ -497,14 +505,14 @@ int additionalSettings()
 			break;
 		case '3':
 			printf("\nLogs deleted\n\n");
-			remove(name1);
-			remove(name2);
+			remove(checkoutLog);
+			remove(dayLog);
 			break;
 		case '4':
 			break;
 		case '5':
-			remove(name1);
-			remove(name2);
+			remove(checkoutLog);
+			remove(dayLog);
 			exit(0);
 		case '6':
 			createDayLog();
@@ -514,6 +522,7 @@ int additionalSettings()
 		}
 	} while (userChoice != '4');
 }
+
 
 void createCheckOutLog(int cost, int tt)
 {
@@ -532,6 +541,7 @@ void createCheckOutLog(int cost, int tt)
 	}
 }
 
+
 void createDayLog()
 {
 	node p;
@@ -543,7 +553,7 @@ void createDayLog()
 	fprintf(f, "%s\n", ctime(&t));
 	while (p != NULL)
 	{
-		if (p->carNumber == 0)
+		if (p->lotStatus == 0)
 		{
 			p = p->link;
 		}
