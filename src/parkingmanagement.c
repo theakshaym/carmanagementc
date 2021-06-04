@@ -36,7 +36,7 @@ typedef struct node {
 	uint8_t lotStatus;
 	int carNumber;
 	int time; // Stores time in seconds
-	uint8_t lot;
+	uint8_t lotNumber;
 	struct node *link;
 }*node;
 
@@ -123,14 +123,14 @@ void createEmptyParkingLots() {	// Creates MAXLOTS number of nodes and stores de
 	int i=2;
 	first=(node)malloc(sizeof(struct node));
 	first->lotStatus = 0;
-	first->lot=1;
+	first->lotNumber=1;
 	first->carNumber=0;
 	first->time=0;
 	q=first;
 
 	while(i<=MAXLOTS) {
 		p=(node)malloc(sizeof(struct node));
-		p->lot = i;
+		p->lotNumber = i;
 		p->carNumber=p->time=0;
 		p->lotStatus = 0;
 		first->link=p;
@@ -149,7 +149,7 @@ void checkInCar() {
 		q=first;
 		while(q!=NULL) {
 			if(q->lotStatus==0) {
-				printf("%d\t",q->lot);
+				printf("%d\t",q->lotNumber);
 			}
 			q=q->link;
 		}
@@ -168,7 +168,7 @@ void checkInCar() {
 		}
 		else {
 			p=first;
-			while(p->lot!=n) {
+			while(p->lotNumber!=n) {
 				p=p->link;
 			}
 			if(p->lotStatus==0) {
@@ -218,7 +218,7 @@ void createCheckOutLog(int cost, int tt) {
 	else {
 
 
-		fprintf(f,"%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n",ctime(&t1),g->lot,g->carNumber,tt,cost);
+		fprintf(f,"%s\nLot no : %d\nVehicle no : %d\nTotal minutes parked = %d\nAmount paid = %d rupees.\n\n\n",ctime(&t1),g->lotNumber,g->carNumber,tt,cost);
 		}
 }
 void createDayLog() {	// Creates a daily log when user exits from program. Also creates import log which is needed to recover data
@@ -234,7 +234,7 @@ void createDayLog() {	// Creates a daily log when user exits from program. Also 
 			p=p->link;
 		}
 		else {
-			fprintf(f,"Lot no : %d\nVehicle number : %d\n\n\n",p->lot,p->carNumber);
+			fprintf(f,"Lot no : %d\nVehicle number : %d\n\n\n",p->lotNumber,p->carNumber);
 			p=p->link;
 		}
 	}
@@ -242,7 +242,7 @@ void createDayLog() {	// Creates a daily log when user exits from program. Also 
 	p=first;
 
 	while(p!=NULL) {
-		fprintf(f,"%d %d %d %d ",p->lotStatus,p->lot,p->carNumber,p->time);
+		fprintf(f,"%d %d %d %d ",p->lotStatus,p->lotNumber,p->carNumber,p->time);
 		p=p->link;
 	}
 }
@@ -254,7 +254,7 @@ void getAndStoreImportLog() { 	// Reads import-log files and stores it in Linked
 	f=fopen(".import.log","a++");
 
 	while(p!=NULL) {
-		fscanf(f,"%d%d%d%d",&p->lotStatus,&p->lot,&p->carNumber,&p->time);
+		fscanf(f,"%d%d%d%d",&p->lotStatus,&p->lotNumber,&p->carNumber,&p->time);
 		p=p->link;
 	}
 	remove(filename);
@@ -341,7 +341,7 @@ void checkOutCar() {	// Check-out function. Also displays amount to be paid by c
 	}
 	else {
 		p=first;
-		while(p->lot!=data) {
+		while(p->lotNumber!=data) {
 			p=p->link;
 		}
 		if(p->lotStatus==0) {
@@ -386,7 +386,7 @@ void displayLotStatus() {	// To Display current status
 	else {
 		printf("\nLot\t\tStatus  \t\tVehicle number\n\n");
 		while(p!=NULL) {
-			printf(" %d \t\t",p->lot);
+			printf(" %d \t\t",p->lotNumber);
 			if(p->lotStatus==0) {
 				printf("Empty   \t\t""     ----   \n\n");
 				p=p->link;
