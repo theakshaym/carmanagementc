@@ -3,8 +3,8 @@
 Check-in and Check-out car in a 10 lot parking space.
 
 * Based on singly linked list (C)
-* Pre-req : ANSI Color code support
-* Run this program in a terminal (linux)
+* Console Application
+* gcc compiler is required
 
 ## Features
 
@@ -15,20 +15,31 @@ Check-in and Check-out car in a 10 lot parking space.
 * Check-out log file containing details of cars checked out.
 * Other settings (deleting log files, reset etc)
 
-### Branches
+### Installation
+
+* Compiled using gcc
+* goto src directory and run
+
+```bash
+gcc parkingmanagement.c -o parkingmanagement
+```
+
+* To run the application,
+
+```bash
+./parkingmanagement
+```
+
+#### Branches
 
 * Master: Stable working branch
 * refactor: Testing branch
 * Legacy: Code before the refactor
 
-### Variables
+#### Variables
 
 |      Variable          | Value |
 |------------------------|-------|
 |Total parking lots      | 10    |
 |Minimum parking amount  | 5     |
 |Amount per minute       | 0.25  |
-
-Screenshot :
-
-![HomeScreen](https://raw.githubusercontent.com/keiclicks/carmanagementc/master/preview/homepage.png "Home-Page")
