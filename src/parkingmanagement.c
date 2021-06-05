@@ -19,16 +19,16 @@ TODO:
 #define AMTPERMIN 0.25 // Amount per minute of parking
 
 int entryPromptAndMenus();
-void createEmptyParkingLots();				// Creates MAXLOTS number of nodes and stores default value in fields i.e 0
-int isFileExists(char name[]);				// checks if .log exists or not in the directory
-void getAndStoreImportLog();					// Reads import-log files and stores it in Linked list
-void checkInCar();								// To Check-in the vehicle
-int isVehicleNumberValid(const char *string, const char *pattern);    //Regex Pattern Matching for Vehicle Number
-void checkOutCar();								// To Check-out the vehicle
-void displayLotStatus();						// To display current parking lot status
-int additionalSettings();						// For choice 4 in Menu
-void createCheckOutLog(int cost, int tt); // To create a check-out log file
-void createDayLog();								// Creates a daily log when user exits from program. Also creates import log which is needed to recover data
+void createEmptyParkingLots();												 // Creates MAXLOTS number of nodes and stores default value in fields i.e 0
+int isFileExists(char name[]);												 // checks if .log exists or not in the directory
+void getAndStoreImportLog();													 // Reads import-log files and stores it in Linked list
+void checkInCar();																 // To Check-in the vehicle
+int isVehicleNumberValid(const char *string, const char *pattern); //Regex Pattern Matching for Vehicle Number
+void checkOutCar();																 // To Check-out the vehicle
+void displayLotStatus();														 // To display current parking lot status
+int additionalSettings();														 // For choice 4 in Menu
+void createCheckOutLog(int cost, int tt);									 // To create a check-out log file
+void createDayLog();																 // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
 typedef struct node
 {
 	uint8_t lotStatus;
@@ -40,15 +40,13 @@ typedef struct node
 
 node first = NULL;
 node g;
-FILE *f;  // To create logs
-
+FILE *f; // To create logs
 
 int main()
 {
 	int exitCode = entryPromptAndMenus();
 	printf("\nGoodbye!\n\n");
 }
-
 
 int entryPromptAndMenus()
 {
@@ -116,7 +114,7 @@ int entryPromptAndMenus()
 			r = first;
 			while (r != NULL)
 			{
-				if (strcmp(r->vehicleNumber,"Empty") == 0)
+				if (r->lotStatus == 0)
 				{
 					break;
 				}
@@ -177,7 +175,6 @@ int entryPromptAndMenus()
 	} while (1);
 }
 
-
 int isFileExists(char name[])
 {
 	if (f = fopen(name, "r"))
@@ -188,7 +185,6 @@ int isFileExists(char name[])
 	return 0;
 }
 
-
 void createEmptyParkingLots()
 {
 	node p, q;
@@ -196,7 +192,7 @@ void createEmptyParkingLots()
 	first = (node)malloc(sizeof(struct node));
 	first->lotStatus = 0;
 	first->lotNumber = 1;
-	strcpy(first->vehicleNumber,"Empty");
+	strcpy(first->vehicleNumber, "Empty");
 	first->time = 0;
 	q = first;
 
@@ -205,7 +201,7 @@ void createEmptyParkingLots()
 		p = (node)malloc(sizeof(struct node));
 		p->lotNumber = i;
 		p->time = 0;
-		strcpy(first->vehicleNumber,"Empty");
+		strcpy(first->vehicleNumber, "Empty");
 		p->lotStatus = 0;
 		first->link = p;
 		first = p;
@@ -214,7 +210,6 @@ void createEmptyParkingLots()
 	first = q;
 	p->link = NULL;
 }
-
 
 void getAndStoreImportLog()
 {
@@ -225,116 +220,109 @@ void getAndStoreImportLog()
 
 	while (p != NULL)
 	{
-		fscanf(f, "%d%d%d%s", &p->lotStatus, &p->lotNumber, &p->time ,p->vehicleNumber);
+		fscanf(f, "%d%d%d%s", &p->lotStatus, &p->lotNumber, &p->time, p->vehicleNumber);
 		p = p->link;
 	}
 	fclose(f);
 	remove(fileName);
 }
 
-
 void checkInCar()
 {
 	int checkInLotNumber, cn;
 	char userVehicleNumber[15];
+	int continueTheLoop = 1;
 	const char *vehicleRegex = "(^[a-zA-Z]+[0-9]+[a-zA-Z]+[0-9]+$)|(^[0-9]+$)";
 	char ch;
 	node p, q, r;
-beg:
-	printf("\nLots available : \n\n");
-	q = first;
-	while (q != NULL)
+	do
 	{
-		if (q->lotStatus == 0)
+		printf("\nLots available : \n\n");
+		q = first;
+		while (q != NULL)
 		{
-			printf("%d\t", q->lotNumber);
-		}
-		q = q->link;
-	}
-	printf("\n\nEnter lot number : ");
-	scanf("%d", &checkInLotNumber);
-	while ((getchar()) != '\n');
-	if (checkInLotNumber > MAXLOTS || checkInLotNumber <= 0)
-	{
-		printf("\nInvalid lot number\n");
-		printf("\nDo you want to return back to menu? ("
-				 "Y"
-				 "\\"
-				 "N"
-				 ") : ");
-		scanf(" %c", &ch);
-		if (ch == 'y' || ch == 'Y')
-		{
-			return;
-		}
-		else
-		{
-			goto beg;
-		}
-	}
-	else
-	{
-		p = first;
-		while (p->lotNumber != checkInLotNumber)
-		{
-			p = p->link;
-		}
-		if (p->lotStatus == 0)
-		{
-		ret2:
-			printf("Enter vehicle number : ");
-			scanf("%s",userVehicleNumber);
-			if(isVehicleNumberValid(userVehicleNumber,vehicleRegex)) {
-				strcpy(p->vehicleNumber,userVehicleNumber);
-				p->time = time(NULL) / 60;
-				p->lotStatus = 1;
-			}
-			else {
-				printf("\nInvalid Vehicle Number. Possible Formats:\n\nKA31F1036\n1036\n\n");
-				printf("Press Enter/Return to continue..");
-				while ((getchar()) != '\n');
-			}
-		}
-		else
-		{
-			printf("\nLot already occupied.\n");
-			r = first;
-			while (r != NULL)
+			if (q->lotStatus == 0)
 			{
-				if (r->lotStatus == 0)
+				printf("%d\t", q->lotNumber);
+			}
+			q = q->link;
+		}
+		printf("\n\nEnter lot number : ");
+		scanf("%d", &checkInLotNumber);
+		while ((getchar()) != '\n')
+			;
+		if (checkInLotNumber > MAXLOTS || checkInLotNumber <= 0)
+		{
+			printf("\n\nInvalid lot number\n");
+			printf("\nDo you want to return back to menu? ("
+					 "Y"
+					 "\\"
+					 "N"
+					 ") : ");
+			scanf(" %c", &ch);
+			if (ch == 'y' || ch == 'Y')
+			{
+				return;
+			}
+		}
+		else
+		{
+			p = first;
+			while (p->lotNumber != checkInLotNumber)
+			{
+				p = p->link;
+			}
+			if (p->lotStatus == 0)
+			{
+				printf("Enter vehicle number : ");
+				scanf("%s", userVehicleNumber);
+				if (isVehicleNumberValid(userVehicleNumber, vehicleRegex))
 				{
-					break;
+					strcpy(p->vehicleNumber, userVehicleNumber);
+					p->time = time(NULL) / 60;
+					p->lotStatus = 1;
+					printf("\nCheck-in Successful!\n\n");
+					continueTheLoop = 0;
 				}
 				else
 				{
-					r = r->link;
+					printf("\nInvalid Vehicle Number. Possible Formats:\n\nKA31F1036\n1036\n\n");
+					printf("Press Enter/Return to continue..\n");
+					while ((getchar()) != '\n')
+						;
 				}
-			}
-			if (r == NULL)
-			{
-				printf("\nAll lots are occupied.\n");
 			}
 			else
 			{
-				goto beg;
+				printf("\nLot already occupied.\n");
+				r = first;
+				while (r != NULL)
+				{
+					if (r->lotStatus == 0)
+					{
+						break;
+					}
+					else
+					{
+						r = r->link;
+					}
+				}
 			}
 		}
-	}
+	} while (continueTheLoop);
 }
-
 
 int isVehicleNumberValid(const char *string, const char *pattern)
 {
-   regex_t re;
-   if (regcomp(&re, pattern, REG_EXTENDED | REG_NOSUB) != 0)
-      return 0;
-   int status = regexec(&re, string, 0, NULL, 0);
-   regfree(&re);
-   if (status != 0)
-      return 0;
-   return 1;
+	regex_t re;
+	if (regcomp(&re, pattern, REG_EXTENDED | REG_NOSUB) != 0)
+		return 0;
+	int status = regexec(&re, string, 0, NULL, 0);
+	regfree(&re);
+	if (status != 0)
+		return 0;
+	return 1;
 }
-
 
 void checkOutCar()
 {
@@ -408,7 +396,6 @@ lab:
 	}
 }
 
-
 void displayLotStatus()
 {
 	node p, r;
@@ -457,7 +444,6 @@ void displayLotStatus()
 	scanf(" %c", &key);
 	printf("\n");
 }
-
 
 int additionalSettings()
 {
@@ -538,7 +524,6 @@ int additionalSettings()
 	} while (userChoice != '4');
 }
 
-
 void createCheckOutLog(int cost, int tt)
 {
 	time_t t1;
@@ -556,7 +541,6 @@ void createCheckOutLog(int cost, int tt)
 	}
 	fclose(f);
 }
-
 
 void createDayLog()
 {
