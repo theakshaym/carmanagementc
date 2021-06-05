@@ -1,12 +1,5 @@
 // Parking Management using C (Single list method)
 
-/*
-TODO:
-	* Fix the infinite loop when entered characters in choice menus.
-	* Remove all the goto: have functions do the same instead.
-	* Remove "Press any key to continue" prompt.
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -24,11 +17,12 @@ int isFileExists(char name[]);												 // checks if .log exists or not in th
 void getAndStoreImportLog();													 // Reads import-log files and stores it in Linked list
 void checkInCar();																 // To Check-in the vehicle
 int isVehicleNumberValid(const char *string, const char *pattern); //Regex Pattern Matching for Vehicle Number
+int displayOccupiedLots();														 //Display Currently occupied lots for CheckOut Function
 void checkOutCar();																 // To Check-out the vehicle
 void displayLotStatus();														 // To display current parking lot status
 int additionalSettings();														 // For choice 4 in Menu
 void createCheckOutLog(int cost, int tt);									 // To create a check-out log file
-void createDayLog();															 // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
+void createDayLog();																 // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
 typedef struct node
 {
 	uint8_t lotStatus;
@@ -68,13 +62,13 @@ int entryPromptAndMenus()
 	if (fileStatus == 1)
 	{
 		printf("\n\nLog exists. Retaining parking details..\n"
-				 "Press Enter/Return to continue");
+				 "Press Enter/Return to continue..");
 		getAndStoreImportLog();
 	}
 	else
 	{
 		printf("\n\nNo log file found. Values set to default.\n"
-				 "Press any Enter/Return to continue");
+				 "Press Enter/Return to continue..");
 	}
 
 	do
@@ -231,7 +225,7 @@ void checkInCar()
 {
 	int checkInLotNumber, cn;
 	char userVehicleNumber[15];
-	int continueTheLoop = 1;
+	uint8_t continueTheLoop = 1;
 	const char *vehicleRegex = "(^[a-zA-Z]+[0-9]+[a-zA-Z]+[0-9]+$)|(^[0-9]+$)";
 	char ch;
 	node p, q, r;
@@ -324,76 +318,121 @@ int isVehicleNumberValid(const char *string, const char *pattern)
 	return 1;
 }
 
-void checkOutCar()
+int displayOccupiedLots()
 {
-	node p;
+	node p, r;
+	int lotCurrentStatus = 1;
 	char key;
-	int data, ch, amountDue, currentTimeInMinutes, totalTimeParked;
-lab:
-	printf("\nEnter lot number to be checked out : "); // lab, lab1, lab 2 are lables for goto to jump to
-	scanf("%d", &data);
-
-	if (data > MAXLOTS || data <= 0)
+	p = first;
+	r = first;
+	while (r != NULL)
 	{
-	lab1:
-		printf("Invalid lot number."
-				 "\nPress 1 to continue check out\nPress 2 to return back to main menu\nChoice : ");
-		goto lab2;
-	lab2:
-		scanf("%d", &ch);
-		if (ch == 1)
+		if (r->lotStatus == 0)
 		{
-			goto lab;
-		}
-		else if (ch == 2)
-		{
-			return;
+			r = r->link;
 		}
 		else
 		{
-			printf("\nInvalid option\n");
-			printf("Press 1 to continue check-out\nPress 2 to return back to main menu\nChoice :");
-			goto lab2;
+			lotCurrentStatus = 0;
+			r = r->link;
 		}
+	}
+	if (lotCurrentStatus == 1)
+	{
+		printf("\nAll lots are empty.\nPress Enter/Return to go back to main menu..");
+		while ((getchar()) != '\n')
+			;
+		return 0;
 	}
 	else
 	{
-		p = first;
-		while (p->lotNumber != data)
+		printf("\nOccupied Lots:\n");
+		printf("\nLot\t\tVehicle number\n\n");
+		while (p != NULL)
 		{
-			p = p->link;
+			if (p->lotStatus == 0)
+			{
+				p = p->link;
+			}
+			else if (p->lotStatus == 1)
+			{
+				printf(" %d \t\t", p->lotNumber);
+				printf("%s\n\n",
+						 p->vehicleNumber);
+				p = p->link;
+			}
 		}
-		if (p->lotStatus == 0)
+		return 1;
+	}
+}
+
+void checkOutCar()
+{
+	node p;
+	int checkOutLotNumber, amountDue, currentTimeInMinutes, totalTimeParked;
+	uint8_t continueTheLoop = 1;
+
+	do
+	{
+		if (displayOccupiedLots())
 		{
-			printf("\nLot is empty\n");
-			printf("Press 1. to continue check out\nPress 2. to return back to main menu\nChoice :");
-			goto lab2;
+			printf("\nEnter lot number to be checked out : ");
+			scanf("%d", &checkOutLotNumber);
+
+			if (checkOutLotNumber > MAXLOTS || checkOutLotNumber <= 0)
+			{
+				printf("\nInvalid lot number.\nPress Enter/Return to go back to menu..");
+				while ((getchar()) != '\n')
+					;
+				return;
+			}
+			else
+			{
+				p = first;
+				while (p->lotNumber != checkOutLotNumber)
+				{
+					p = p->link;
+				}
+				if (p->lotStatus == 0)
+				{
+					printf("\nLot is empty\n");
+					printf("\nPress Enter/Return to go back to main menu..");
+					while ((getchar()) != '\n')
+						;
+					continueTheLoop = 0;
+				}
+				else
+				{
+					currentTimeInMinutes = time(NULL) / 60;
+					totalTimeParked = currentTimeInMinutes - (p->time);
+					amountDue = totalTimeParked * AMTPERMIN + MINAMT;
+					g = p;
+					createCheckOutLog(amountDue, totalTimeParked);
+					printf("\nOwner of vehicle "
+							 "%s"
+							 " has parked for "
+							 "%d minutes "
+							 "and has to pay "
+							 "%d"
+							 " rupees.\n\n"
+							 "Check-out successful."
+							 "\n\n",
+							 p->vehicleNumber, totalTimeParked, amountDue);
+					p->time = 0;
+					strcpy(p->vehicleNumber, "Empty");
+					p->lotStatus = 0;
+					continueTheLoop = 0;
+					printf("\nPress Enter/Return to continue..");
+					while ((getchar()) != '\n')
+						;
+				}
+			}
 		}
 		else
 		{
-			currentTimeInMinutes = time(NULL) / 60;
-			totalTimeParked = currentTimeInMinutes - (p->time);
-			amountDue = totalTimeParked * AMTPERMIN + MINAMT;
-			g = p;
-			createCheckOutLog(amountDue, totalTimeParked);
-			printf("\nOwner of vehicle "
-					 "%s"
-					 " has parked for "
-					 "%d minutes "
-					 "and has to pay "
-					 "%d"
-					 " rupees.\n\n"
-					 "Check-out successful."
-					 "\n\n",
-					 p->vehicleNumber, totalTimeParked, amountDue);
-			p->time = 0;
-			strcpy(p->vehicleNumber, "Empty");
-			p->lotStatus = 0;
-			printf("\nPress any key (alphabets or intergers) to continue..");
-			scanf(" %c", &key);
-			printf("\n\n");
+			continueTheLoop = 0;
 		}
-	}
+	} while (continueTheLoop);
 }
 
 void displayLotStatus()
@@ -417,7 +456,7 @@ void displayLotStatus()
 	}
 	if (lotCurrentStatus == 1)
 	{
-		printf("\nAll lots are empty.\n\n");
+		printf("\nAll lots are empty.\n");
 	}
 	else
 	{
@@ -440,9 +479,9 @@ void displayLotStatus()
 			}
 		}
 	}
-	printf("\nPress any key (alphabets or numbers) to continue...");
-	scanf(" %c", &key);
-	printf("\n");
+	printf("\nPress Enter/Return to go back to main menu..");
+	while ((getchar()) != '\n')
+		;
 }
 
 int additionalSettings()
