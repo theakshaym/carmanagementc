@@ -28,7 +28,7 @@ void checkOutCar();																 // To Check-out the vehicle
 void displayLotStatus();														 // To display current parking lot status
 int additionalSettings();														 // For choice 4 in Menu
 void createCheckOutLog(int cost, int tt);									 // To create a check-out log file
-void createDayLog();																 // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
+void createDayLog();															 // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
 typedef struct node
 {
 	uint8_t lotStatus;
