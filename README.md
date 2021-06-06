@@ -1,5 +1,8 @@
 # carmanagementc
+
 Check-in and Check-out car in a 10 lot parking space.
+
+* This is a legacy code and is not recommended 
 * Based on singly linked list (C)
 * Pre-req : ANSI Color code support
 * Run this program in a terminal (linux)
