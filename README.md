@@ -33,7 +33,7 @@ gcc parkingmanagement.c -o parkingmanagement
 #### Branches
 
 * Master: Stable working branch
-* refactor: Testing branch
+* refactor: Testing branch (Merged)
 * Legacy: Code before the refactor
 
 #### Variables
