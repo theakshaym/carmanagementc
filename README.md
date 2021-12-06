@@ -19,7 +19,6 @@ Check-in and Check-out car in a 10 lot parking space.
 ### Installation
 
 * Compiled using gcc
-* go-to source directory and run
 
 ```bash
 gcc parkingmanagement.c -o parkingmanagement
