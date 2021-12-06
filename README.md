@@ -5,7 +5,7 @@ Check-in and Check-out car in a 10 lot parking space.
 * Based on singly linked list (C)
 * Console Application
 * gcc compiler
-* regex C library
+* regex library
 
 ## Features
 
