@@ -14,7 +14,7 @@ Check-in and Check-out car in a 10 lot parking space.
 * Display current status
 * Log files for retaining previous day parking details
 * Check-out log file containing details of cars checked out.
-* Other settings (deleting log files, reset the data)
+* Other settings (deleting log files)
 
 ### Installation
 
