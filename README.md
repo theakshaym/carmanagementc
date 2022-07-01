@@ -4,8 +4,9 @@ Check-in and Check-out car in a 10 lot parking space.
 
 * Based on singly linked list (C)
 * Console Application
-* gcc compiler
+* gcc or clang compiler
 * regex library
+* make
 
 ## Features
 
@@ -18,16 +19,17 @@ Check-in and Check-out car in a 10 lot parking space.
 
 ### Installation
 
-* Compiled using gcc
+* Compiled using gcc or clang.
+* Change the CC value in makefile
 
 ```bash
-gcc parkingmanagement.c -o parkingmanagement
+make carpark
 ```
 
 * To run the application,
 
 ```bash
-./parkingmanagement
+./carpark
 ```
 
 #### Branches

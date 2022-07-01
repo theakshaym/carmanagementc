@@ -16,19 +16,19 @@ void createEmptyParkingLots();												 // Creates MAXLOTS number of nodes an
 int isFileExists(char name[]);												 // checks if .log exists or not in the directory
 void getAndStoreImportLog();													 // Reads import-log files and stores it in Linked list
 void checkInCar();																 // To Check-in the vehicle
-int isVehicleNumberValid(const char *string, const char *pattern); //Regex Pattern Matching for Vehicle Number
-int displayOccupiedLots();														 //Display Currently occupied lots for CheckOut Function
+int isVehicleNumberValid(const char *string, const char *pattern); // Regex Pattern Matching for Vehicle Number
+int displayOccupiedLots();														 // Display Currently occupied lots for CheckOut Function
 void checkOutCar();																 // To Check-out the vehicle
 void displayLotStatus();														 // To display current parking lot status
-int additionalSettings();														 // For choice 4 in Menu
+void additionalSettings();														 // For choice 4 in Menu
 void createCheckOutLog(int cost, int tt);									 // To create a check-out log file
 void createDayLog();																 // Creates a daily log when user exits from program. Also creates import log which is needed to recover data
 typedef struct node
 {
-	uint8_t lotStatus;
+	int lotStatus;
 	char vehicleNumber[15];
 	int time; // Stores time in seconds
-	uint8_t lotNumber;
+	int lotNumber;
 	struct node *link;
 } * node;
 
@@ -46,7 +46,7 @@ int entryPromptAndMenus()
 {
 	int fileStatus, i, j;
 	char userChoice, programExitChoice;
-	char filename[] = ".import.log";
+	char filename[] = "import.log";
 	char s[64];
 	node r;
 	printf("\n\n\n\tParking Management System\t\n");
@@ -171,7 +171,7 @@ int entryPromptAndMenus()
 
 int isFileExists(char name[])
 {
-	if (f = fopen(name, "r"))
+	if ((f = fopen(name, "r")))
 	{
 		fclose(f);
 		return 1;
@@ -207,25 +207,27 @@ void createEmptyParkingLots()
 
 void getAndStoreImportLog()
 {
-	char fileName[] = ".import.log";
+	char fileName[] = "import.log";
 	node p;
+	char vehicleNumber[12];
 	p = first;
-	f = fopen(".import.log", "a++");
+	f = fopen("import.log", "r");
 
 	while (p != NULL)
 	{
-		fscanf(f, "%d%d%d%s", &p->lotStatus, &p->lotNumber, &p->time, p->vehicleNumber);
+		fscanf(f, "%d%d%d %s", &p->lotStatus, &p->lotNumber, &p->time, vehicleNumber);
+		strcpy(p->vehicleNumber, vehicleNumber);
 		p = p->link;
 	}
 	fclose(f);
-	remove(fileName);
+	//remove(fileName);
 }
 
 void checkInCar()
 {
 	int checkInLotNumber, cn;
 	char userVehicleNumber[15];
-	uint8_t continueTheLoop = 1;
+	int continueTheLoop = 1;
 	const char *vehicleRegex = "(^[a-zA-Z]+[0-9]+[a-zA-Z]+[0-9]+$)|(^[0-9]+$)";
 	char ch;
 	node p, q, r;
@@ -370,7 +372,7 @@ void checkOutCar()
 {
 	node p;
 	int checkOutLotNumber, amountDue, currentTimeInMinutes, totalTimeParked;
-	uint8_t continueTheLoop = 1;
+	int continueTheLoop = 1;
 
 	do
 	{
@@ -484,7 +486,7 @@ void displayLotStatus()
 		;
 }
 
-int additionalSettings()
+void additionalSettings()
 {
 	int fileStatus, i;
 	char userChoice;
@@ -513,7 +515,7 @@ int additionalSettings()
 		printf("\n\nEnter your choice : ");
 		while ((getchar()) != '\n')
 			;
-		userChoice = getchar(); //reads the buffer till the end and discards them (including newline)
+		userChoice = getchar(); // reads the buffer till the end and discards them (including newline)
 
 		switch (userChoice)
 		{
@@ -603,7 +605,7 @@ void createDayLog()
 		}
 	}
 	fclose(f);
-	f = fopen(".import.log", "a++");
+	f = fopen("import.log", "w");
 	p = first;
 
 	while (p != NULL)
